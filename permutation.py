@@ -1,4 +1,4 @@
-"""Permutations of finitely many positive integers"""
+""" Permutations of finitely many positive integers """
 
 import operator
 
@@ -6,7 +6,7 @@ __all__ = ["Permutation"]
 
 class Permutation(object):
     def __init__(self, mapping=(), even=None, order=None, lehmer=None):
-    # not for public use
+        # not for public use
         self._map    = tuple(mapping)
         self._even   = even
         self._order  = order
@@ -17,7 +17,8 @@ class Permutation(object):
         self._map = self._map[0:i+1]
 
     @classmethod
-    def identity(cls): return cls()
+    def identity(cls):
+        return cls()
 
     def __call__(self, i):
         return self._map[i-1] if 0 < i <= len(self._map) else i
@@ -34,7 +35,7 @@ class Permutation(object):
         return '%s(%r)' % (type(self).__name__, self._map)
 
     def __str__(self):
-        cycles = self.toCycles()
+        cycles = self.to_cycles()
         if cycles:
             return ''.join('(' + ' '.join(map(str,cyc)) + ')' for cyc in cycles)
         else:
@@ -43,17 +44,22 @@ class Permutation(object):
     @classmethod
     def parse(cls, s):  # inverse of `__str__`
         s = s.strip()
-        if not s: raise ValueError('empty argument')
-        if s == '1': return cls.identity()
-        if s[0] != '(': raise ValueError('invalid argument')
+        if not s:
+            raise ValueError('empty argument')
+        if s == '1':
+            return cls.identity()
+        if s[0] != '(':
+            raise ValueError('invalid argument')
         cycles = []
         for c in s[1:].split('('):
             c = c.strip()
-            if not c or c[-1] != ')': raise ValueError('invalid argument')
+            if not c or c[-1] != ')':
+                raise ValueError('invalid argument')
             cycles.append(int(x) for x in c[:-1].split())
-        return cls.fromCycles(cycles)
+        return cls.from_cycles(cycles)
 
-    def __nonzero__(self): return self._map != ()
+    def __nonzero__(self):
+        return self._map != ()
 
     def __cmp__(self, other):
         # This comparison method produces the same ordering as the modified
@@ -61,10 +67,12 @@ class Permutation(object):
         return cmp(type(self), type(other)) or cmp(self.degree, other.degree) \
             or cmp(other._map[::-1], self._map[::-1])
 
-    def __hash__(self): return hash(self._map)
+    def __hash__(self):
+        return hash(self._map)
 
     @property
-    def degree(self): return len(self._map)
+    def degree(self):
+        return len(self._map)
 
     @property
     def inverse(self):
@@ -76,20 +84,22 @@ class Permutation(object):
     @property
     def order(self):
         if self._order is None:
-            self._order = reduce(lcm, map(len, self.toCycles()), 1)
+            self._order = reduce(lcm, map(len, self.to_cycles()), 1)
         return self._order
 
     @property
-    def isEven(self):
+    def is_even(self):
         if self._even is None:
-            self._even = not sum((len(cyc)-1 for cyc in self.toCycles()), 0) % 2
+            self._even = not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
         return self._even
 
     @property
-    def isOdd(self): return not self.isEven
+    def is_odd(self):
+        return not self.is_even
 
     @property
-    def sign(self): return 1 if self.isEven else -1
+    def sign(self):
+        return 1 if self.is_even else -1
 
     @property
     def lehmer(self):
@@ -103,8 +113,9 @@ class Permutation(object):
         return self._lehmer
 
     @classmethod
-    def fromLehmer(cls, x):
-        if x < 0: raise ValueError('argument must be nonnegative')
+    def from_lehmer(cls, x):
+        if x < 0:
+            raise ValueError('argument must be nonnegative')
         x0 = x
         mapping = []
         f = 1
@@ -118,7 +129,7 @@ class Permutation(object):
             f += 1
         return cls((len(mapping)-c for c in mapping), lehmer=x0)
 
-    def toCycles(self):
+    def to_cycles(self):
         cmap = list(self._map)
         cycles = []
         for i in range(len(cmap)):
@@ -137,8 +148,10 @@ class Permutation(object):
 
     @classmethod
     def transposition(cls, a, b):
-        """Returns the permutation representing the transposition of the
-           positive integers `a` and `b`"""
+        """
+        Returns the permutation representing the transposition of the positive
+        integers ``a`` and ``b``
+        """
         if a < 1 or b < 1:
             raise ValueError('values must be positive')
         elif a == b:
@@ -158,39 +171,45 @@ class Permutation(object):
                        even=False, order=2, lehmer=lehmer)
 
     @classmethod
-    def fromCycle(cls, cyc):
+    def from_cycle(cls, cyc):
         cyc = list(cyc)
-        if len(cyc) < 2: return cls()
+        if len(cyc) < 2:
+            return cls()
         mapping = {}
         maxVal = 0
         for (i,v) in enumerate(cyc):
-            if v < 1: raise ValueError('values must be positive')
+            if v < 1:
+                raise ValueError('values must be positive')
             if v in mapping:
                 raise ValueError('%s appears more than once in cycle' % (v,))
             mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
-            if v > maxVal: maxVal = v
+            if v > maxVal:
+                maxVal = v
         return cls((mapping.get(i,i) for i in range(1, maxVal+1)),
                    even = len(cyc) % 2, order=len(cyc))
 
     @classmethod
-    def fromCycles(cls, cycles):
-        return reduce(operator.mul, map(cls.fromCycle, cycles), cls())
+    def from_cycles(cls, cycles):
+        return reduce(operator.mul, map(cls.from_cycle, cycles), cls())
 
     def disjoint(self, other):
         for (i,(a,b)) in enumerate(zip(self._map, other._map)):
-            if i+1 != a and i+1 != b: return False
+            if i+1 != a and i+1 != b:
+                return False
         return True
 
     @classmethod
-    def firstOfDegree(cls, n):
-        """Returns the first `Permutation` of degree ``n`` in modified Lehmer
-           code order.  If ``n`` is 0 or 1 (or anything less than 0), this is
-           the identity.  For higher degrees, this is
-           ``Permutation.transposition(n, n-1)``."""
+    def first_of_degree(cls, n):
+        """
+        Returns the first `Permutation` of degree ``n`` in modified Lehmer code
+        order.  If ``n`` is 0 or 1 (or anything less than 0), this is the
+        identity.  For higher degrees, this is ``Permutation.transposition(n,
+        n-1)``.
+        """
         return cls.identity() if n < 2 else cls.transposition(n, n-1)
 
     def next(self):
-        """Returns the next `Permutation` in modified Lehmer code order"""
+        """ Returns the next `Permutation` in modified Lehmer code order """
         if self.degree < 2:
             return self.transposition(1,2)
         else:
@@ -204,12 +223,14 @@ class Permutation(object):
                     map2[i], map2[i2] = map2[i2], map2[i]
                     map2[:i] = reversed(map2[:i])
                     return type(self)(map2, lehmer=lehmer2)
-            return self.firstOfDegree(self.degree+1)
+            return self.first_of_degree(self.degree+1)
 
     def prev(self):
-        """Returns the previous `Permutation` in modified Lehmer code order.
-           If ``self`` is the identity (which has Lehmer code 0), a
-           `ValueError` is raised."""
+        """
+        Returns the previous `Permutation` in modified Lehmer code order.  If
+        ``self`` is the identity (which has Lehmer code 0), a `ValueError` is
+        raised.
+        """
         if self.degree < 2:
             raise ValueError('cannot decrement identity')
         lehmer2 = self._lehmer-1 if self._lehmer is not None else None
@@ -230,7 +251,7 @@ class Permutation(object):
             yield p
             p = p.next()
 
-    def toImage(self, n=None):
+    def to_image(self, n=None):
         # Returns the image of 1 through `n` (or self.degree, whichever's
         # bigger) under the permutation
         if n is None or n <= self.degree:
@@ -239,17 +260,20 @@ class Permutation(object):
             return self._map + tuple(range(self.degree+1, n+1))
 
     @classmethod
-    def fromImage(cls, img):
+    def from_image(cls, img):
         img = tuple(img)
         used = [False] * len(img)
         for i in img:
-            if i < 1:        raise ValueError('values must be positive')
-            if i > len(img): raise ValueError('value missing from input')
-            if used[i-1]:    raise ValueError('value repeated in input')
+            if i < 1:
+                raise ValueError('values must be positive')
+            if i > len(img):
+                raise ValueError('value missing from input')
+            if used[i-1]:
+                raise ValueError('value repeated in input')
             used[i-1] = True
         return cls(img)
 
-    def permuteSeq(self, xs):
+    def permute_seq(self, xs):
         if len(xs) < self.degree:
             raise ValueError('sequence must have at least `degree` elements')
         out = [None] * len(xs)
@@ -260,10 +284,14 @@ class Permutation(object):
 
 def gcd(x,y):
     (a,b) = (abs(x), abs(y))
-    if a == 0 and b == 0: return 0
-    elif a == 0 or b == 0: return a or b
+    if a == 0 and b == 0:
+        return 0
+    elif a == 0 or b == 0:
+        return a or b
     while b != 0:
         (a,b) = (b, a % b)
     return a
 
-def lcm(x,y): d = gcd(x,y); return 0 if d == 0 else abs(x*y) // d
+def lcm(x,y):
+    d = gcd(x,y)
+    return 0 if d == 0 else abs(x*y) // d
