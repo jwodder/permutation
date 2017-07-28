@@ -88,7 +88,6 @@ class Permutation(object):
     def degree(self):
         return len(self._map)
 
-    @property
     def inverse(self):
         newMap = [None] * len(self._map)
         for (a,b) in enumerate(self._map):
