@@ -114,8 +114,7 @@ class Permutation(object):
     def sign(self):
         return 1 if self.is_even else -1
 
-    @property
-    def lehmer(self):
+    def modified_lehmer(self):
         if self._lehmer is None:
             left = range(len(self._map), 0, -1)
             self._lehmer = 0
@@ -126,7 +125,7 @@ class Permutation(object):
         return self._lehmer
 
     @classmethod
-    def from_lehmer(cls, x):
+    def from_modified_lehmer(cls, x):
         if x < 0:
             raise ValueError('argument must be nonnegative')
         x0 = x
@@ -241,8 +240,8 @@ class Permutation(object):
     def prev_permutation(self):
         """
         Returns the previous `Permutation` in modified Lehmer code order.  If
-        ``self`` is the identity (which has Lehmer code 0), a `ValueError` is
-        raised.
+        ``self`` is the identity (which has modified Lehmer code 0), a
+        `ValueError` is raised.
         """
         if self.degree < 2:
             raise ValueError('cannot decrement identity')
