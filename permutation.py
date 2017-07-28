@@ -1,9 +1,12 @@
 """ Permutations of finitely many positive integers """
 
+from   fractions import gcd
+from   functools import reduce, total_ordering
 import operator
 
 __all__ = ["Permutation"]
 
+@total_ordering
 class Permutation(object):
     def __init__(self, mapping=(), even=None, order=None, lehmer=None):
         # not for public use
@@ -61,11 +64,22 @@ class Permutation(object):
     def __nonzero__(self):
         return self._map != ()
 
-    def __cmp__(self, other):
+    __bool__ = __nonzero__
+
+    def __eq__(self, other):
+        if type(self) is type(other):
+            return self._map == other._map
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
         # This comparison method produces the same ordering as the modified
         # Lehmer codes.
-        return cmp(type(self), type(other)) or cmp(self.degree, other.degree) \
-            or cmp(other._map[::-1], self._map[::-1])
+        if type(self) is type(other):
+            return (-other.degree, other._map[::-1]) < \
+                (-self.degree, self._map[::-1])
+        else:
+            return NotImplemented
 
     def __hash__(self):
         return hash(self._map)
@@ -140,9 +154,9 @@ class Permutation(object):
                 cmap[x-1] = 0
                 while y != x:
                     cyke.append(y)
-                    next = cmap[y-1]
+                    nxt = cmap[y-1]
                     cmap[y-1] = 0
-                    y = next
+                    y = nxt
                 cycles.append(tuple(cyke))
         return cycles
 
@@ -208,7 +222,7 @@ class Permutation(object):
         """
         return cls.identity() if n < 2 else cls.transposition(n, n-1)
 
-    def next(self):
+    def next_permutation(self):
         """ Returns the next `Permutation` in modified Lehmer code order """
         if self.degree < 2:
             return self.transposition(1,2)
@@ -225,7 +239,7 @@ class Permutation(object):
                     return type(self)(map2, lehmer=lehmer2)
             return self.first_of_degree(self.degree+1)
 
-    def prev(self):
+    def prev_permutation(self):
         """
         Returns the previous `Permutation` in modified Lehmer code order.  If
         ``self`` is the identity (which has Lehmer code 0), a `ValueError` is
@@ -249,7 +263,7 @@ class Permutation(object):
         p = cls()
         while p.degree <= n:
             yield p
-            p = p.next()
+            p = p.next_permutation()
 
     def to_image(self, n=None):
         # Returns the image of 1 through `n` (or self.degree, whichever's
@@ -281,16 +295,6 @@ class Permutation(object):
             out[self(i+1)-1] = xs[i]
         return out
 
-
-def gcd(x,y):
-    (a,b) = (abs(x), abs(y))
-    if a == 0 and b == 0:
-        return 0
-    elif a == 0 or b == 0:
-        return a or b
-    while b != 0:
-        (a,b) = (b, a % b)
-    return a
 
 def lcm(x,y):
     d = gcd(x,y)
