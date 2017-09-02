@@ -356,7 +356,7 @@ class Permutation(object):
         """
         return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
 
-    def disjoint(self, other):
+    def isdisjoint(self, other):
         """
         Returns `True` iff the permutation and ``other`` are disjoint, i.e.,
         iff they do not permute any of the same integers
