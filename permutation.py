@@ -109,7 +109,7 @@ class Permutation(object):
             if not c or c[-1] != ')':
                 raise ValueError(s)
             cycles.append(int(x) for x in c[:-1].split())
-        return cls.from_cycles(cycles)
+        return cls.from_cycles(*cycles)
 
     def __nonzero__(self):
         """ A `Permutation` is true iff it is not the identity """
@@ -202,7 +202,7 @@ class Permutation(object):
         :return: The permutation's modified Lehmer code
         """
         if self._lehmer is None:
-            left = range(len(self._map), 0, -1)
+            left = list(range(len(self._map), 0, -1))
             self._lehmer = 0
             for x in left[:]:
                 i = left.index(self(x))
@@ -337,18 +337,18 @@ class Permutation(object):
                    even = len(cyc) % 2, order=len(cyc))
 
     @classmethod
-    def from_cycles(cls, cycles):
+    def from_cycles(cls, *cycles):
         """
         Construct the product of zero or more cyclic permutations.  Each
-        element of the iterable ``cycles`` is converted to a `Permutation` with
-        `cycle`, and the results are then multiplied together and returned.
+        element of ``cycles`` is converted to a `Permutation` with `cycle`, and
+        the results are then multiplied together and returned.
 
         The cycles in ``cycles`` need not be disjoint.  When ``cycles`` is
         empty, `from_cycles` returns `identity`.
 
         This is the inverse of `to_cycles`.
 
-        :param iterable cycles:
+        :param cycles: zero or more iterables of unique positive integers
         :return: the `Permutation` represented by the product of the cycles
         :raises ValueError:
             - if any cycle contains a value less than 1
