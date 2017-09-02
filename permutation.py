@@ -202,12 +202,13 @@ class Permutation(object):
         :return: The permutation's modified Lehmer code
         """
         if self._lehmer is None:
-            left = list(range(len(self._map), 0, -1))
-            self._lehmer = 0
+            left = list(range(self.degree, 0, -1))
+            digits = []
             for x in left[:]:
                 i = left.index(self(x))
                 del left[i]
-                self._lehmer = self._lehmer * x + i
+                digits.append(i)
+            self._lehmer = from_factorial_base(digits[:-1])
         return self._lehmer
 
     @classmethod
@@ -222,18 +223,13 @@ class Permutation(object):
         """
         if x < 0:
             raise ValueError(x)
-        x0 = x
-        mapping = []
-        f = 1
-        while x > 0:
-            c = x % f
+        mapping = [0]
+        for c in reversed(to_factorial_base(x)):
             for (i,y) in enumerate(mapping):
                 if y >= c:
                     mapping[i] += 1
             mapping.append(c)
-            x //= f
-            f += 1
-        return cls((len(mapping)-c for c in mapping), lehmer=x0)
+        return cls((len(mapping)-c for c in mapping), lehmer=x)
 
     def to_cycles(self):
         """
@@ -511,3 +507,34 @@ class Permutation(object):
 def lcm(x,y):
     d = gcd(x,y)
     return 0 if d == 0 else abs(x*y) // d
+
+def to_factorial_base(n):
+    """
+    Convert a nonnegative integer to its representation in the `factorial number
+    system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
+    (represented as a list of digits in descending order of place value, not
+    including the final zero digit sometimes appended for the 0! place)
+    """
+    if n < 0:
+        raise ValueError(n)
+    if n == 0:
+        return [0]
+    digits = []
+    i = 1
+    while n > 0:
+        digits.append(n % (i+1))
+        i += 1
+        n //= i
+    digits.reverse()
+    return digits
+
+def from_factorial_base(digits):
+    """ Inverse of `to_factorial_base` """
+    n = 0
+    base = 1
+    for i,d in enumerate(reversed(digits), start=1):
+        if not (0 <= d <= i):
+            raise ValueError(digits)
+        n += d * base
+        base *= i + 1
+    return n
