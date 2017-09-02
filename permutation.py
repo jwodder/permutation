@@ -330,7 +330,7 @@ class Permutation(object):
             if v > maxVal:
                 maxVal = v
         return cls((mapping.get(i,i) for i in range(1, maxVal+1)),
-                   even = len(cyc) % 2, order=len(cyc))
+                   even = bool(len(cyc) % 2), order=len(cyc))
 
     @classmethod
     def from_cycles(cls, *cycles):
