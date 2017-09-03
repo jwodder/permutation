@@ -9,6 +9,7 @@ __url__          = 'https://github.com/jwodder/permutation'
 from   fractions import gcd
 from   functools import reduce, total_ordering
 from   itertools import starmap
+from   math      import factorial
 import operator
 
 __all__ = ["Permutation"]
@@ -252,16 +253,14 @@ class Permutation(object):
         cmap = list(self._map)
         cycles = []
         for i in range(len(cmap)):
-            if cmap[i] != 0 and cmap[i] != i+1:
+            if cmap[i] not in (0, i+1):
                 x = i+1
-                cyke = [x]
-                y = cmap[x-1]
-                cmap[x-1] = 0
-                while y != x:
-                    cyke.append(y)
-                    nxt = cmap[y-1]
-                    cmap[y-1] = 0
-                    y = nxt
+                cyke = []
+                while True:
+                    cyke.append(x)
+                    cmap[x-1], x = 0, cmap[x-1]
+                    if x == i+1:
+                        break
                 cycles.append(tuple(cyke))
         return cycles
 
@@ -290,7 +289,7 @@ class Permutation(object):
             big = max(a,b)
             small = min(a,b)
             lehmer = 0
-            fac = reduce(operator.mul, range(1, small+1))
+            fac = factorial(small)
             for i in range(small, big-1):
                 lehmer += fac
                 fac *= i+1
@@ -501,7 +500,7 @@ class Permutation(object):
         out = [None] * len(xs)
         for i in range(len(xs)):
             out[self(i+1)-1] = xs[i]
-        return out
+        return tuple(out)
 
 
 def lcm(x,y):

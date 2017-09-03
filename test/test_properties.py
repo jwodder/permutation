@@ -3,26 +3,28 @@ import pytest
 from   permutation import Permutation
 
 PermData = namedtuple(
-    'PermData', 'p degree order even sign mod_lehmer cycles str',
+    'PermData',
+    'p degree order even sign bool mod_lehmer cycles str image permuted',
 )
 
 PERMUTATIONS = [
-    PermData(Permutation.identity(),                     0, 1, True,   1,   0, [],                  '1'),
-    PermData(Permutation.transposition(1,2),             2, 2, False, -1,   1, [(1,2)],             '(1 2)'),
-    PermData(Permutation.transposition(2,1),             2, 2, False, -1,   1, [(1,2)],             '(1 2)'),
-    PermData(Permutation.transposition(2,3),             3, 2, False, -1,   2, [(2,3)],             '(2 3)'),
-    PermData(Permutation.cycle(1,3,2),                   3, 3, True,   1,   3, [(1,3,2)],           '(1 3 2)'),
-    PermData(Permutation.cycle(1,2,3),                   3, 3, True,   1,   4, [(1,2,3)],           '(1 2 3)'),
-    PermData(Permutation.transposition(1,3),             3, 2, False, -1,   5, [(1,3)],             '(1 3)'),
-    PermData(Permutation.transposition(3,4),             4, 2, False, -1,   6, [(3,4)],             '(3 4)'),
-    PermData(Permutation.from_cycles((1,2),(3,4)),       4, 2, True,   1,   7, [(1,2),(3,4)],       '(1 2)(3 4)'),
-    PermData(Permutation.cycle(1,2,3,4),                 4, 4, False, -1,  18, [(1,2,3,4)],         '(1 2 3 4)'),
-    PermData(Permutation.from_cycles((1,2,3),(4,5)),     5, 6, False, -1,  28, [(1,2,3),(4,5)],     '(1 2 3)(4 5)'),
-    PermData(Permutation.cycle(1,2,3,4,5),               5, 5, True,   1,  96, [(1,2,3,4,5)],       '(1 2 3 4 5)'),
-    PermData(Permutation.from_cycles((1,2),(3,4),(5,6)), 6, 2, False, -1, 127, [(1,2),(3,4),(5,6)], '(1 2)(3 4)(5 6)'),
-    PermData(Permutation.from_cycles((1,2,3,4),(5,6)),   6, 4, True,   1, 138, [(1,2,3,4),(5,6)],   '(1 2 3 4)(5 6)'),
-    PermData(Permutation.from_cycles((1,2,3),(4,5,6)),   6, 3, True,   1, 244, [(1,2,3),(4,5,6)],   '(1 2 3)(4 5 6)'),
-    PermData(Permutation.cycle(1,2,3,4,5,6),             6, 6, False, -1, 600, [(1,2,3,4,5,6)],     '(1 2 3 4 5 6)'),
+    PermData(Permutation.identity(),                     0, 1, True,   1, False,   0, [],                  '1',               (),            ()),
+    PermData(Permutation.transposition(1,2),             2, 2, False, -1, True,    1, [(1,2)],             '(1 2)',           (2,1),         (2,1)),
+    PermData(Permutation.transposition(2,1),             2, 2, False, -1, True,    1, [(1,2)],             '(1 2)',           (2,1),         (2,1)),
+    PermData(Permutation.transposition(2,3),             3, 2, False, -1, True,    2, [(2,3)],             '(2 3)',           (1,3,2),       (1,3,2)),
+    PermData(Permutation.cycle(1,3,2),                   3, 3, True,   1, True,    3, [(1,3,2)],           '(1 3 2)',         (3,1,2),       (2,3,1)),
+    PermData(Permutation.cycle(1,2,3),                   3, 3, True,   1, True,    4, [(1,2,3)],           '(1 2 3)',         (2,3,1),       (3,1,2)),
+    PermData(Permutation.transposition(1,3),             3, 2, False, -1, True,    5, [(1,3)],             '(1 3)',           (3,2,1),       (3,2,1)),
+    PermData(Permutation.transposition(3,4),             4, 2, False, -1, True,    6, [(3,4)],             '(3 4)',           (1,2,4,3),     (1,2,4,3)),
+    PermData(Permutation.from_cycles((1,2),(3,4)),       4, 2, True,   1, True,    7, [(1,2),(3,4)],       '(1 2)(3 4)',      (2,1,4,3),     (2,1,4,3)),
+    PermData(Permutation.cycle(1,2,3,4),                 4, 4, False, -1, True,   18, [(1,2,3,4)],         '(1 2 3 4)',       (2,3,4,1),     (4,1,2,3)),
+    PermData(Permutation.from_cycles((1,2,3),(4,5)),     5, 6, False, -1, True,   28, [(1,2,3),(4,5)],     '(1 2 3)(4 5)',    (2,3,1,5,4),   (3,1,2,5,4)),
+    PermData(Permutation.cycle(1,2,3,4,5),               5, 5, True,   1, True,   96, [(1,2,3,4,5)],       '(1 2 3 4 5)',     (2,3,4,5,1),   (5,1,2,3,4)),
+    PermData(Permutation.from_cycles((1,5),(2,4)),       5, 2, True,   1, True,  119, [(1,5),(2,4)],       '(1 5)(2 4)',      (5,4,3,2,1),   (5,4,3,2,1)),
+    PermData(Permutation.from_cycles((1,2),(3,4),(5,6)), 6, 2, False, -1, True,  127, [(1,2),(3,4),(5,6)], '(1 2)(3 4)(5 6)', (2,1,4,3,6,5), (2,1,4,3,6,5)),
+    PermData(Permutation.from_cycles((1,2,3,4),(5,6)),   6, 4, True,   1, True,  138, [(1,2,3,4),(5,6)],   '(1 2 3 4)(5 6)',  (2,3,4,1,6,5), (4,1,2,3,6,5)),
+    PermData(Permutation.from_cycles((1,2,3),(4,5,6)),   6, 3, True,   1, True,  244, [(1,2,3),(4,5,6)],   '(1 2 3)(4 5 6)',  (2,3,1,5,6,4), (3,1,2,6,4,5)),
+    PermData(Permutation.cycle(1,2,3,4,5,6),             6, 6, False, -1, True,  600, [(1,2,3,4,5,6)],     '(1 2 3 4 5 6)',   (2,3,4,5,6,1), (6,1,2,3,4,5)),
 ]
 
 @pytest.mark.parametrize('p,degree', [(pd.p, pd.degree) for pd in PERMUTATIONS])
@@ -68,5 +70,21 @@ def test_str(p,s):
 @pytest.mark.parametrize('p,s', [(d.p, d.str) for d in PERMUTATIONS])
 def test_parse(p,s):
     assert Permutation.parse(s) == p
+
+@pytest.mark.parametrize('p,b', [(d.p, d.bool) for d in PERMUTATIONS])
+def test_bool(p,b):
+    assert bool(p) is b
+
+@pytest.mark.parametrize('p,image', [(d.p, d.image) for d in PERMUTATIONS])
+def test_to_image(p, image):
+    assert p.to_image() == image
+
+@pytest.mark.parametrize('p,image', [(d.p, d.image) for d in PERMUTATIONS])
+def test_from_image(p, image):
+    assert Permutation.from_image(image) == p
+
+@pytest.mark.parametrize('p,permuted', [(d.p, d.permuted) for d in PERMUTATIONS])
+def test_permute_seq(p, permuted):
+    assert p.permute_seq(range(1, p.degree+1)) == permuted
 
 # vim:set nowrap:
