@@ -9,7 +9,6 @@ __url__          = 'https://github.com/jwodder/permutation'
 from   fractions import gcd
 from   functools import reduce, total_ordering
 from   itertools import starmap
-from   math      import factorial
 import operator
 
 __all__ = ["Permutation"]
@@ -22,12 +21,9 @@ class Permutation(object):
     itself.
     """
 
-    def __init__(self, mapping=(), even=None, order=None, lehmer=None):
+    def __init__(self, mapping=()):
         # not for public use
-        self._map    = tuple(mapping)
-        self._even   = even
-        self._order  = order
-        self._lehmer = lehmer
+        self._map = tuple(mapping)
         i = len(self._map) - 1
         while i >= 0 and self._map[i] == i+1:
             i -= 1
@@ -61,11 +57,7 @@ class Permutation(object):
         :rtype: Permutation
         """
         return type(self)((self(other(i+1))
-                           for i in range(max(self.degree, other.degree))),
-                          even = self._even == other._even
-                              if self._even is not None
-                                  and other._even is not None
-                              else None)
+                           for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
         return '%s(%r)' % (type(self).__name__, self._map)
@@ -98,16 +90,14 @@ class Permutation(object):
             permutation
         """
         s = s.strip()
-        if not s:
-            raise ValueError(s)
         if s == '1':
             return cls.identity()
-        if s[0] != '(':
+        if not s.startswith('('):
             raise ValueError(s)
         cycles = []
         for c in s[1:].split('('):
             c = c.strip()
-            if not c or c[-1] != ')':
+            if not c.endswith(')'):
                 raise ValueError(s)
             cycles.append(int(x) for x in c[:-1].split())
         return cls.from_cycles(*cycles)
@@ -156,7 +146,7 @@ class Permutation(object):
         newMap = [None] * len(self._map)
         for (a,b) in enumerate(self._map):
             newMap[b-1] = a+1
-        return type(self)(newMap, even=self._even, order=self._order)
+        return type(self)(newMap)
 
     @property
     def order(self):
@@ -165,9 +155,7 @@ class Permutation(object):
         such that multiplying ``n`` copies of the permutation together produces
         the identity
         """
-        if self._order is None:
-            self._order = reduce(lcm, map(len, self.to_cycles()), 1)
-        return self._order
+        return reduce(lcm, map(len, self.to_cycles()), 1)
 
     @property
     def is_even(self):
@@ -175,9 +163,7 @@ class Permutation(object):
         Whether the permutation is even, i.e., can be expressed as the product
         of an even number of transpositions
         """
-        if self._even is None:
-            self._even = not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
-        return self._even
+        return not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
 
     @property
     def is_odd(self):
@@ -202,15 +188,13 @@ class Permutation(object):
 
         :return: The permutation's modified Lehmer code
         """
-        if self._lehmer is None:
-            left = list(range(self.degree, 0, -1))
-            digits = []
-            for x in left[:]:
-                i = left.index(self(x))
-                del left[i]
-                digits.append(i)
-            self._lehmer = from_factorial_base(digits[:-1])
-        return self._lehmer
+        left = list(range(self.degree, 0, -1))
+        digits = []
+        for x in left[:]:
+            i = left.index(self(x))
+            del left[i]
+            digits.append(i)
+        return from_factorial_base(digits[:-1])
 
     @classmethod
     def from_modified_lehmer(cls, x):
@@ -230,7 +214,7 @@ class Permutation(object):
                 if y >= c:
                     mapping[i] += 1
             mapping.append(c)
-        return cls((len(mapping)-c for c in mapping), lehmer=x)
+        return cls((len(mapping)-c for c in mapping))
 
     def to_cycles(self):
         """
@@ -285,18 +269,8 @@ class Permutation(object):
         elif a == b:
             return cls()
         else:
-            # For $a<b$, $Lehmer((a b)) = (b-a) (b-1)! + \sum_{i=a}^{b-2} i!$
-            big = max(a,b)
-            small = min(a,b)
-            lehmer = 0
-            fac = factorial(small)
-            for i in range(small, big-1):
-                lehmer += fac
-                fac *= i+1
-            lehmer += fac * (big-small)
             return cls((b if x == a else a if x == b else x
-                        for x in range(1, big+1)),
-                       even=False, order=2, lehmer=lehmer)
+                        for x in range(1, max(a,b)+1)))
 
     @classmethod
     def cycle(cls, *cyc):
@@ -328,8 +302,7 @@ class Permutation(object):
             mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
             if v > maxVal:
                 maxVal = v
-        return cls((mapping.get(i,i) for i in range(1, maxVal+1)),
-                   even = bool(len(cyc) % 2), order=len(cyc))
+        return cls((mapping.get(i,i) for i in range(1, maxVal+1)))
 
     @classmethod
     def from_cycles(cls, *cycles):
@@ -385,7 +358,6 @@ class Permutation(object):
         if self.degree < 2:
             return self.transposition(1,2)
         else:
-            lehmer2 = self._lehmer+1 if self._lehmer is not None else None
             map2 = list(self._map)
             for i in range(1, len(map2)):
                 if map2[i] > map2[i-1]:
@@ -394,7 +366,7 @@ class Permutation(object):
                         i2 += 1
                     map2[i], map2[i2] = map2[i2], map2[i]
                     map2[:i] = reversed(map2[:i])
-                    return type(self)(map2, lehmer=lehmer2)
+                    return type(self)(map2)
             return self.first_of_degree(self.degree+1)
 
     def prev_permutation(self):
@@ -407,7 +379,6 @@ class Permutation(object):
         """
         if self.degree < 2:
             raise ValueError('cannot decrement identity')
-        lehmer2 = self._lehmer-1 if self._lehmer is not None else None
         map2 = list(self._map)
         for i in range(1, len(map2)):
             if map2[i] < map2[i-1]:
@@ -416,7 +387,7 @@ class Permutation(object):
                     i2 += 1
                 map2[i], map2[i2] = map2[i2], map2[i]
                 map2[:i] = reversed(map2[:i])
-                return type(self)(map2, lehmer=lehmer2)
+                return type(self)(map2)
 
     @classmethod
     def s_n(cls, n):
