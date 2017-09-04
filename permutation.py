@@ -24,10 +24,10 @@ class Permutation(object):
     def __init__(self, mapping=()):
         # not for public use
         self._map = tuple(mapping)
-        i = len(self._map) - 1
-        while i >= 0 and self._map[i] == i+1:
+        i = len(self._map)
+        while i > 0 and self._map[i-1] == i:
             i -= 1
-        self._map = self._map[0:i+1]
+        self._map = self._map[:i]
 
     @classmethod
     def identity(cls):
@@ -39,7 +39,7 @@ class Permutation(object):
 
     def __call__(self, i):
         """
-        Maps the integer ``i`` through the permutation.  Values less than 1 are
+        Map an integer through the permutation.  Values less than 1 are
         returned unchanged.
 
         :type i: int
@@ -60,7 +60,7 @@ class Permutation(object):
                            for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
-        return '%s(%r)' % (type(self).__name__, self._map)
+        return '{}({!r})'.format(type(self).__name__, self._map)
 
     def __str__(self):
         """
@@ -143,10 +143,7 @@ class Permutation(object):
 
         :rtype: Permutation
         """
-        newMap = [None] * len(self._map)
-        for (a,b) in enumerate(self._map):
-            newMap[b-1] = a+1
-        return type(self)(newMap)
+        return type(self)(self.permute_seq(range(1, self.degree+1)))
 
     @property
     def order(self):
@@ -298,7 +295,7 @@ class Permutation(object):
             if v < 1:
                 raise ValueError('values must be positive')
             if v in mapping:
-                raise ValueError('%s appears more than once in cycle' % (v,))
+                raise ValueError('{} appears more than once in cycle'.format(v))
             mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
             if v > maxVal:
                 maxVal = v
@@ -388,6 +385,7 @@ class Permutation(object):
                 map2[i], map2[i2] = map2[i2], map2[i]
                 map2[:i] = reversed(map2[:i])
                 return type(self)(map2)
+        assert False
 
     @classmethod
     def s_n(cls, n):
@@ -423,10 +421,7 @@ class Permutation(object):
         :return: the image of 1 through either ``n`` or `degree` (whichever is
             larger) under the permutation
         """
-        if n is None or n <= self.degree:
-            return self._map
-        else:
-            return self._map + tuple(range(self.degree+1, n+1))
+        return self._map + tuple(range(self.degree+1, (n or self.degree)+1))
 
     @classmethod
     def from_image(cls, img):
@@ -460,7 +455,8 @@ class Permutation(object):
 
     def permute_seq(self, xs):
         """
-        Reorders the elements of a sequence according to the permutation
+        Reorders the elements of a sequence according to the permutation; each
+        element at index ``i`` is moved to index ``p(i)``.
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence

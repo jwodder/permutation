@@ -1,7 +1,7 @@
 import errno
 from   os.path    import dirname, join
 import re
-from   setuptools import setup, find_packages
+from   setuptools import setup
 
 with open(join(dirname(__file__), 'permutation.py')) as fp:
     for line in fp:
