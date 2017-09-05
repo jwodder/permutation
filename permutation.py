@@ -329,10 +329,8 @@ class Permutation(object):
         :param Permutation other: a Permutation to compare against
         :rtype: bool
         """
-        for (i,(a,b)) in enumerate(zip(self._map, other._map)):
-            if i+1 != a and i+1 != b:
-                return False
-        return True
+        return all(i+1 in (a,b)
+                   for (i,(a,b)) in enumerate(zip(self._map, other._map)))
 
     @classmethod
     def first_of_degree(cls, n):
