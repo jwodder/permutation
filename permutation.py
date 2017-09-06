@@ -21,13 +21,37 @@ class Permutation(object):
     itself.
     """
 
-    def __init__(self, mapping=()):
-        # not for public use
-        self._map = tuple(mapping)
-        i = len(self._map)
-        while i > 0 and self._map[i-1] == i:
-            i -= 1
-        self._map = self._map[:i]
+    def __init__(self, *img):
+        """
+        A permutation can be constructed from a sequence of integers specifying
+        the results of applying the target permutation to the integers 1
+        through some ``n``.  If ``p = Permutation(*img)``, then ``p(1) ==
+        img[0]``, ``p(2) == img[1]``, etc.
+
+        ``Permutation()`` (with no arguments) evaluates to the identity
+        permutation.
+
+        :param img: zero or more unique positive integers giving the image of
+            the permutation to construct
+        :raises ValueError:
+            - if ``img`` contains a value less than 1
+            - if ``img`` contains the same value more than once
+            - if ``img`` does not contain every integer value from 1 through
+              ``len(img)``
+        """
+        d = len(img)
+        used = [False] * d
+        for i in img:
+            if i < 1:
+                raise ValueError('values must be positive')
+            if i > d:
+                raise ValueError('value missing from input')
+            if used[i-1]:
+                raise ValueError('value repeated in input')
+            used[i-1] = True
+        while d > 0 and img[d-1] == d:
+            d -= 1
+        self._map = img[:d]
 
     @classmethod
     def identity(cls):
@@ -56,8 +80,8 @@ class Permutation(object):
         :type other: Permutation
         :rtype: Permutation
         """
-        return type(self)((self(other(i+1))
-                           for i in range(max(self.degree, other.degree))))
+        return type(self)(*(self(other(i+1))
+                            for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
         return '{}({!r})'.format(type(self).__name__, self._map)
@@ -143,7 +167,7 @@ class Permutation(object):
 
         :rtype: Permutation
         """
-        return type(self)(self.permute_seq(range(1, self.degree+1)))
+        return type(self)(*self.permute_seq(range(1, self.degree+1)))
 
     @property
     def order(self):
@@ -211,7 +235,7 @@ class Permutation(object):
                 if y >= c:
                     mapping[i] += 1
             mapping.append(c)
-        return cls((len(mapping)-c for c in mapping))
+        return cls(*(len(mapping)-c for c in mapping))
 
     def to_cycles(self):
         """
@@ -266,8 +290,8 @@ class Permutation(object):
         elif a == b:
             return cls()
         else:
-            return cls((b if x == a else a if x == b else x
-                        for x in range(1, max(a,b)+1)))
+            return cls(*(b if x == a else a if x == b else x
+                         for x in range(1, max(a,b)+1)))
 
     @classmethod
     def cycle(cls, *cyc):
@@ -299,7 +323,7 @@ class Permutation(object):
             mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
             if v > maxVal:
                 maxVal = v
-        return cls((mapping.get(i,i) for i in range(1, maxVal+1)))
+        return cls(*(mapping.get(i,i) for i in range(1, maxVal+1)))
 
     @classmethod
     def from_cycles(cls, *cycles):
@@ -361,7 +385,7 @@ class Permutation(object):
                         i2 += 1
                     map2[i], map2[i2] = map2[i2], map2[i]
                     map2[:i] = reversed(map2[:i])
-                    return type(self)(map2)
+                    return type(self)(*map2)
             return self.first_of_degree(self.degree+1)
 
     def prev_permutation(self):
@@ -382,7 +406,7 @@ class Permutation(object):
                     i2 += 1
                 map2[i], map2[i2] = map2[i2], map2[i]
                 map2[:i] = reversed(map2[:i])
-                return type(self)(map2)
+                return type(self)(*map2)
         assert False
 
     @classmethod
@@ -420,36 +444,6 @@ class Permutation(object):
             larger) under the permutation
         """
         return self._map + tuple(range(self.degree+1, (n or self.degree)+1))
-
-    @classmethod
-    def from_image(cls, img):
-        """
-        Construct a permutation from a sequence of integers that specifies the
-        results of applying the target permutation to the integers 1 through
-        some ``n``.  If ``p = Permutation.from_image(img)``, then ``p(1) ==
-        img[0]``, ``p(2) == img[1]``, etc.
-
-        When ``img`` is empty, `from_image` returns `identity`.
-
-        :param sequence img: the image of the permutation to construct
-        :return: the `Permutation` with image ``img``
-        :raises ValueError:
-            - if ``img`` contains a value less than 1
-            - if ``img`` contains the same value more than once
-            - if ``img`` does not contain every integer value from 1 through
-              ``len(img)``
-        """
-        img = tuple(img)
-        used = [False] * len(img)
-        for i in img:
-            if i < 1:
-                raise ValueError('values must be positive')
-            if i > len(img):
-                raise ValueError('value missing from input')
-            if used[i-1]:
-                raise ValueError('value repeated in input')
-            used[i-1] = True
-        return cls(img)
 
     def permute_seq(self, xs):
         """
