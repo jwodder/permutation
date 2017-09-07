@@ -7,13 +7,12 @@ __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/permutation'
 
 from   fractions import gcd
-from   functools import reduce, total_ordering
+from   functools import reduce
 from   itertools import starmap
 import operator
 
 __all__ = ["Permutation"]
 
-@total_ordering
 class Permutation(object):
     """
     A `Permutation` object represents a permutation of finitely many positive
@@ -84,7 +83,7 @@ class Permutation(object):
                             for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
-        return '{}({!r})'.format(type(self).__name__, self._map)
+        return type(self).__name__ + repr(self._map)
 
     def __str__(self):
         """
@@ -135,15 +134,6 @@ class Permutation(object):
     def __eq__(self, other):
         if type(self) is type(other):
             return self._map == other._map
-        else:
-            return NotImplemented
-
-    def __lt__(self, other):
-        # This comparison method produces the same ordering as the modified
-        # Lehmer codes.
-        if type(self) is type(other):
-            return (-other.degree, other._map[::-1]) < \
-                (-self.degree, self._map[::-1])
         else:
             return NotImplemented
 
@@ -356,19 +346,6 @@ class Permutation(object):
         return all(i+1 in (a,b)
                    for (i,(a,b)) in enumerate(zip(self._map, other._map)))
 
-    @classmethod
-    def first_of_degree(cls, n):
-        """
-        Returns the first permutation (in modified Lehmer code order) of degree
-        ``n``.  If ``n`` is 0 or 1 (or anything less than 0), this is
-        `identity`.  For higher degrees, this is ``Permutation.transposition(n,
-        n-1)``.
-
-        :type n: int
-        :rtype: Permutation
-        """
-        return cls.identity() if n < 2 else cls.transposition(n, n-1)
-
     def next_permutation(self):
         """
         Returns the next `Permutation` in modified Lehmer code order (also the
@@ -386,7 +363,7 @@ class Permutation(object):
                     map2[i], map2[i2] = map2[i2], map2[i]
                     map2[:i] = reversed(map2[:i])
                     return type(self)(*map2)
-            return self.first_of_degree(self.degree+1)
+            return type(self).transposition(self.degree, self.degree+1)
 
     def prev_permutation(self):
         """
@@ -413,10 +390,9 @@ class Permutation(object):
     def s_n(cls, n):
         """
         Generates all permutations in the symmetric group of degree ``n``,
-        i.e., all permutations with degree less than or equal to ``n``, i.e.,
-        all permutations from `identity` up to but not including
-        ``first_of_degree(n+1)``.  The permutations are yielded in ascending
-        order of their modified Lehmer codes.
+        i.e., all permutations with degree less than or equal to ``n``.  The
+        permutations are yielded in ascending order of their modified Lehmer
+        codes.
 
         :param int n: a nonnegative integer
         :return: a generator of all `Permutation`s with degree ``n`` or less
@@ -468,8 +444,8 @@ def lcm(x,y):
 
 def to_factorial_base(n):
     """
-    Convert a nonnegative integer to its representation in the `factorial number
-    system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
+    Convert a nonnegative integer to its representation in the `factorial
+    number system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
     (represented as a list of digits in descending order of place value, not
     including the final zero digit sometimes appended for the 0! place)
     """
