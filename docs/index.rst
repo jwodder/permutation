@@ -4,7 +4,10 @@
 permutation — Permutations of finitely many positive integers
 =============================================================
 
-.. autoclass:: Permutation()
+.. autoclass:: Permutation
+    :special-members:
+    :no-undoc-members:
+    :exclude-members: __weakref__
 
 Indices and tables
 ==================

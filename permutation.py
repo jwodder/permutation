@@ -18,26 +18,16 @@ class Permutation(object):
     A `Permutation` object represents a permutation of finitely many positive
     integers, i.e., a bijective function from some integer range ``[1,n]`` to
     itself.
+
+    The arguments to the constructor are the elements of the permutation's word
+    representation, i.e., the images of the integers 1 through some ``n`` under
+    the permutation.  For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is the
+    permutation that maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and 6 to
+    2.  ``Permutation()`` (with no arguments) evaluates to the identity
+    permutation.
     """
 
     def __init__(self, *img):
-        """
-        A permutation can be constructed from a sequence of integers specifying
-        the results of applying the target permutation to the integers 1
-        through some ``n``.  If ``p = Permutation(*img)``, then ``p(1) ==
-        img[0]``, ``p(2) == img[1]``, etc.
-
-        ``Permutation()`` (with no arguments) evaluates to the identity
-        permutation.
-
-        :param img: zero or more unique positive integers giving the image of
-            the permutation to construct
-        :raises ValueError:
-            - if ``img`` contains a value less than 1
-            - if ``img`` contains the same value more than once
-            - if ``img`` does not contain every integer value from 1 through
-              ``len(img)``
-        """
         d = len(img)
         used = [False] * d
         for i in img:
@@ -87,12 +77,16 @@ class Permutation(object):
 
     def __str__(self):
         """
-        Convert a `Permutation` to cycle notation.  The instance is decomposed
-        into cycles with `to_cycles()`, each cycle is written as a
-        parenthesized space-separated sequence of integers, and the cycles are
-        concatenated.
+        Convert a `Permutation` to `cycle notation
+        <https://en.wikipedia.org/wiki/Permutation#Cycle_notation>`_.  The
+        instance is decomposed into cycles with `to_cycles()`, each cycle is
+        written as a parenthesized space-separated sequence of integers, and
+        the cycles are concatenated.
 
         When applied to the identity, `__str__` returns ``"1"``.
+
+        >>> str(Permutation(2, 5, 4, 3, 1))
+        '(1 2 5)(3 4)'
         """
         cycles = self.to_cycles()
         if cycles:
@@ -104,10 +98,10 @@ class Permutation(object):
     def parse(cls, s):
         """
         Parse a permutation written in cycle notation.  This is the inverse of
-        `__str__`, though it also accepts input with superfluous whitespace.
+        `__str__` (though it also accepts input with superfluous whitespace).
 
         :param str s: a permutation written in cycle notation
-        :return: the Permutation represented by ``s``
+        :return: the permutation represented by ``s``
         :rtype: Permutation
         :raises ValueError: if ``s`` is not valid cycle notation for a
             permutation
@@ -193,11 +187,12 @@ class Permutation(object):
         """
         Encode the permutation as a nonnegative integer using a modified form
         of `Lehmer codes <https://en.wikipedia.org/wiki/Lehmer_code>`_.  This
-        encoding establishes a bijection between permutation values and
-        nonnegative integers, with `from_modified_lehmer()` converting values
-        in the opposite direction.
+        encoding establishes a bijection between permutations and nonnegative
+        integers, with `from_modified_lehmer()` converting values in the
+        opposite direction.
 
-        :return: The permutation's modified Lehmer code
+        :return: the permutation's modified Lehmer code
+        :rtype: int
         """
         left = list(range(self.degree, 0, -1))
         digits = []
@@ -210,8 +205,8 @@ class Permutation(object):
     @classmethod
     def from_modified_lehmer(cls, x):
         """
-        Returns the permutation corresponding to the given modified Lehmer
-        code.  This is the inverse of `modified_lehmer()`.
+        Returns the permutation with the given modified Lehmer code.  This is
+        the inverse of `modified_lehmer()`.
 
         :param int x: a nonnegative integer
         :return: the `Permutation` with modified Lehmer code ``x``
@@ -262,10 +257,11 @@ class Permutation(object):
     @classmethod
     def transposition(cls, a, b):
         """
-        Returns the transposition of ``a`` and ``b``, i.e., the permutation
-        that maps ``a`` to ``b``, maps ``b`` to ``a``, and leaves all other
-        values unchanged.  When ``a`` equals ``b``, `transposition` returns
-        `identity`.
+        Returns the `transposition
+        <https://en.wikipedia.org/wiki/Cyclic_permutation#Transpositions>`_ of
+        ``a`` and ``b``, i.e., the permutation that maps ``a`` to ``b``, maps
+        ``b`` to ``a``, and leaves all other values unchanged.  When ``a``
+        equals ``b``, `transposition` returns `identity`.
 
         :param int a: a positive integer
         :param int b: a positive integer
@@ -289,10 +285,12 @@ class Permutation(object):
         Construct a `cyclic permutation
         <https://en.wikipedia.org/wiki/Cyclic_permutation>`_ from a sequence of
         unique positive integers.  If ``p = Permutation.cycle(*cyc)``, then
-        ``p(cyc[0]) == cyc[1]``, p(cyc[1]) == cyc[2]``, etc., and ``p(cyc[-1])
-        == cyc[0]``, with all other values returned unchanged.
+        ``p(cyc[0]) == cyc[1]``, ``p(cyc[1]) == cyc[2]``, etc., and
+        ``p(cyc[-1]) == cyc[0]``, with ``p`` returning all other values
+        unchanged.
 
-        When ``cyc`` is empty, `cycle` returns `identity`.
+        ``Permutation.cycle()`` (with no arguments) evaluates to the identity
+        permutation.
 
         :param cyc: zero or more unique positive integers
         :return: the permutation represented by the given cycle
@@ -318,12 +316,11 @@ class Permutation(object):
     @classmethod
     def from_cycles(cls, *cycles):
         """
-        Construct the product of zero or more cyclic permutations.  Each
+        Construct a `Permutation` from zero or more cyclic permutations.  Each
         element of ``cycles`` is converted to a `Permutation` with `cycle`, and
-        the results are then multiplied together and returned.
-
-        The cycles in ``cycles`` need not be disjoint.  When ``cycles`` is
-        empty, `from_cycles` returns `identity`.
+        the results (which need not be disjoint) are multiplied together.
+        ``Permutation.from_cycles()`` (with no arguments) evaluates to the
+        identity permutation.
 
         This is the inverse of `to_cycles`.
 
@@ -340,62 +337,56 @@ class Permutation(object):
         Returns `True` iff the permutation and ``other`` are disjoint, i.e.,
         iff they do not permute any of the same integers
 
-        :param Permutation other: a Permutation to compare against
+        :param Permutation other: a permutation to compare against
         :rtype: bool
         """
         return all(i+1 in (a,b)
                    for (i,(a,b)) in enumerate(zip(self._map, other._map)))
 
     def next_permutation(self):
-        """
-        Returns the next `Permutation` in modified Lehmer code order (also the
-        least `Permutation` greater than the invocant)
-        """
-        if self.degree < 2:
-            return self.transposition(1,2)
-        else:
-            map2 = list(self._map)
-            for i in range(1, len(map2)):
-                if map2[i] > map2[i-1]:
-                    i2 = 0
-                    while map2[i] <= map2[i2]:
-                        i2 += 1
-                    map2[i], map2[i2] = map2[i2], map2[i]
-                    map2[:i] = reversed(map2[:i])
-                    return type(self)(*map2)
-            return type(self).transposition(self.degree, self.degree+1)
+        """ Returns the next `Permutation` in modified Lehmer code order """
+        map2 = list(self._map)
+        for i in range(1, len(map2)):
+            if map2[i] > map2[i-1]:
+                j = 0
+                while map2[i] <= map2[j]:
+                    j += 1
+                map2[i], map2[j] = map2[j], map2[i]
+                map2[:i] = reversed(map2[:i])
+                return type(self)(*map2)
+        d = max(self.degree, 1)
+        return type(self).transposition(d, d+1)
 
     def prev_permutation(self):
         """
-        Returns the previous `Permutation` in modified Lehmer code order (also
-        the greatest `Permutation` less than the invocant)
+        Returns the previous `Permutation` in modified Lehmer code order
 
         :raises ValueError: if called on the identity `Permutation` (which has
-            modified Lehmer code 0)
+            no predecessor)
         """
         if self.degree < 2:
             raise ValueError('cannot decrement identity')
         map2 = list(self._map)
         for i in range(1, len(map2)):
             if map2[i] < map2[i-1]:
-                i2 = 0
-                while map2[i] >= map2[i2]:
-                    i2 += 1
-                map2[i], map2[i2] = map2[i2], map2[i]
+                j = 0
+                while map2[i] >= map2[j]:
+                    j += 1
+                map2[i], map2[j] = map2[j], map2[i]
                 map2[:i] = reversed(map2[:i])
                 return type(self)(*map2)
         assert False
 
     @classmethod
     def s_n(cls, n):
-        """
+        r"""
         Generates all permutations in the symmetric group of degree ``n``,
         i.e., all permutations with degree less than or equal to ``n``.  The
         permutations are yielded in ascending order of their modified Lehmer
         codes.
 
         :param int n: a nonnegative integer
-        :return: a generator of all `Permutation`s with degree ``n`` or less
+        :return: a generator of all `Permutation`\ s with degree ``n`` or less
         :raises ValueError: if ``n`` is less than 0
         """
         if n < 0:
@@ -407,9 +398,9 @@ class Permutation(object):
 
     def to_image(self, n=None):
         """
-        Return a tuple of the results of applying the permutation to the
+        Returns a tuple of the results of applying the permutation to the
         integers 1 through ``n``, or through `degree` if ``n`` is unspecified
-        or less than `degree`.  If ``v = p.to_image()`, then ``v[0] == p(1)``,
+        or less than `degree`.  If ``v = p.to_image()``, then ``v[0] == p(1)``,
         ``v[1] == p(2)``, etc.
 
         When the permutation is the identity, `to_image` called without an
@@ -430,6 +421,7 @@ class Permutation(object):
         :return: a permuted sequence
         :raise ValueError: if ``len(xs)`` is less than `degree`
         """
+        xs = list(xs)
         if len(xs) < self.degree:
             raise ValueError('sequence must have at least `degree` elements')
         out = [None] * len(xs)
