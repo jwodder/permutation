@@ -55,7 +55,7 @@ class Permutation(object):
         Map an integer through the permutation.  Values less than 1 are
         returned unchanged.
 
-        :type i: int
+        :param int i:
         :return: the image of ``i`` under the permutation
         """
         return self._map[i-1] if 0 < i <= len(self._map) else i
@@ -66,7 +66,7 @@ class Permutation(object):
         `Permutation` ``r`` such that ``r(x) == p(q(x))`` for all integers
         ``x``.
 
-        :type other: Permutation
+        :param Permutation other:
         :rtype: Permutation
         """
         return type(self)(*(self(other(i+1))
@@ -182,6 +182,55 @@ class Permutation(object):
         even, -1 if it is odd
         """
         return 1 if self.is_even else -1
+
+    def lehmer(self, n):
+        """
+        Calculate the `Lehmer code
+        <https://en.wikipedia.org/wiki/Lehmer_code>`_ of the permutation with
+        respect to all permutations of degree at most ``n``.  This is the
+        (zero-based) index of the permutation in the list of all permutations
+        of degree at most ``n`` ordered lexicographically by word
+        representation.
+
+        :param int n:
+        :rtype: int
+        :raises ValueError: if ``n`` is less than `degree`
+        """
+        if n < self.degree:
+            raise ValueError(n)
+        left = list(range(1, n+1))
+        digits = []
+        for x in left[:]:
+            i = left.index(self(x))
+            del left[i]
+            digits.append(i)
+        return from_factorial_base(digits[:-1])
+
+    @classmethod
+    def from_lehmer(cls, x, n):
+        """
+        Calculate the permutation in :math:`S_n` with Lehmer code ``x``.  This
+        is the permutation at index ``x`` (zero-based) in the list of all
+        permutations of degree at most ``n`` ordered lexicographically by word
+        representation.
+
+        :param int x: a nonnegative integer
+        :param int n: the degree of the symmetric group with respect to which
+            ``x`` was calculated
+        :return: the `Permutation` with Lehmer code ``x``
+        :raises ValueError: if ``x`` is less than 0
+        """
+        if x < 0:
+            raise ValueError(x)
+        mapping = []
+        for i in range(1, n+1):
+            c = x % i
+            for (j,y) in enumerate(mapping):
+                if y >= c:
+                    mapping[j] += 1
+            mapping.insert(0,c)
+            x //= i
+        return cls(*(c+1 for c in mapping))
 
     def modified_lehmer(self):
         """
@@ -416,6 +465,9 @@ class Permutation(object):
         """
         Reorders the elements of a sequence according to the permutation; each
         element at index ``i`` is moved to index ``p(i)``.
+
+        Note that ``p.permute_seq(range(1, p.degree+1)) ==
+        p.inverse().to_image()``.
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence
