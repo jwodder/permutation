@@ -28,7 +28,14 @@ setup(
     license='MIT',
     author='John Thorvald Wodder II',
     author_email='permutation@varonathe.org',
-    ###keywords='',
+    keywords=[
+        'permutation',
+        'math',
+        'maths',
+        'mathematics',
+        'symmetric group',
+        'group theory',
+    ],
     description='Permutations of finitely many positive integers',
     long_description=long_desc,
     url='https://github.com/jwodder/permutation',
@@ -53,7 +60,7 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
 
         'License :: OSI Approved :: MIT License',
-
-        ###
+        'Intended Audience :: Developers',
+        'Topic :: Scientific/Engineering :: Mathematics',
     ],
 )
