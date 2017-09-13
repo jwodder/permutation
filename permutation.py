@@ -348,8 +348,6 @@ class Permutation(object):
             - if ``cyc`` contains the same value more than once
         """
         cyc = list(cyc)
-        if len(cyc) < 2:
-            return cls()
         mapping = {}
         maxVal = 0
         for (i,v) in enumerate(cyc):
