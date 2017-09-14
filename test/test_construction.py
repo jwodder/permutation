@@ -51,22 +51,39 @@ def test_bad_transposition(a,b):
         Permutation.transposition(a,b)
 
 @pytest.mark.parametrize('cyc', [
-    ([-1]),
-    ([1, 2, -1]),
-    ([-1, -2, -3]),
-    ([1, 2, 1]),
+    [-1],
+    [1, 2, -1],
+    [-1, -2, -3],
+    [1, 2, 1],
+    [1, 1],
 ])
 def test_bad_cycle(cyc):
     with pytest.raises(ValueError):
         Permutation.cycle(*cyc)
 
 @pytest.mark.parametrize('cycles', [
-    ([(-1,)]),
-    ([(1, 2, -1,)]),
-    ([(-1, -2, -3,)]),
-    ([(1, 2, 1,)]),
-    ([(-1, 2), (-1, 2)]),
+    [(-1,)],
+    [(1, 2, -1,)],
+    [(-1, -2, -3,)],
+    [(1, 2, 1,)],
+    [(1, 1,)],
+    [(-1, 2), (-1, 2)],
 ])
 def test_bad_from_cycles(cycles):
     with pytest.raises(ValueError):
         Permutation.from_cycles(*cycles)
+
+@pytest.mark.parametrize('img', [
+    [2],
+    [2, 3],
+    [1, 2, 1],
+    [0, 1, 2],
+    [-1, 2, 3],
+    [-1],
+    [1, 2, -1],
+    [-1, -2, -3],
+    [1, 1],
+])
+def test_bad_init(img):
+    with pytest.raises(ValueError):
+        Permutation(*img)
