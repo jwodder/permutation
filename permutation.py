@@ -131,6 +131,9 @@ class Permutation(object):
         else:
             return NotImplemented
 
+    def __ne__(self, other):
+        return not (self == other)
+
     def __hash__(self):
         return hash(self._map)
 
