@@ -70,6 +70,10 @@ def test_str(p,s):
 def test_parse(p,s):
     assert Permutation.parse(s) == p
 
+@pytest.mark.parametrize('p,image', [(d.p, d.image) for d in PERMUTATIONS])
+def test_repr(p, image):
+    assert repr(p) == 'permutation.Permutation' + repr(image)
+
 @pytest.mark.parametrize('p,b', [(d.p, d.bool) for d in PERMUTATIONS])
 def test_bool(p,b):
     assert bool(p) is b

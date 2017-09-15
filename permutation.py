@@ -73,7 +73,7 @@ class Permutation(object):
                             for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
-        return type(self).__name__ + repr(self._map)
+        return '{0.__module__}.{0.__name__}{1!r}'.format(type(self), self._map)
 
     def __str__(self):
         """
