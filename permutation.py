@@ -16,14 +16,14 @@ __all__ = ["Permutation"]
 class Permutation(object):
     """
     A `Permutation` object represents a permutation of finitely many positive
-    integers, i.e., a bijective function from some integer range ``[1,n]`` to
-    itself.
+    integers, i.e., a bijective function from some integer range :math:`[1,n]`
+    to itself.
 
     The arguments to the constructor are the elements of the permutation's word
-    representation, i.e., the images of the integers 1 through some ``n`` under
-    the permutation.  For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is the
-    permutation that maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and 6 to
-    2.  ``Permutation()`` (with no arguments) evaluates to the identity
+    representation, i.e., the images of the integers 1 through some :math:`n`
+    under the permutation.  For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is
+    the permutation that maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and
+    6 to 2.  ``Permutation()`` (with no arguments) evaluates to the identity
     permutation.
     """
 
@@ -83,7 +83,9 @@ class Permutation(object):
         written as a parenthesized space-separated sequence of integers, and
         the cycles are concatenated.
 
-        When applied to the identity, `__str__` returns ``"1"``.
+        ``str(Permutation.identity())`` is ``"1"``.
+
+        This is the inverse of `parse`.
 
         >>> str(Permutation(2, 5, 4, 3, 1))
         '(1 2 5)(3 4)'
@@ -159,9 +161,9 @@ class Permutation(object):
     @property
     def order(self):
         """
-        The order of the permutation, i.e., the smallest positive integer ``n``
-        such that multiplying ``n`` copies of the permutation together produces
-        the identity
+        The order of the permutation, i.e., the smallest positive integer
+        :math:`n` such that multiplying :math:`n` copies of the permutation
+        together produces the identity
         """
         return reduce(lcm, map(len, self.to_cycles()), 1)
 
@@ -195,6 +197,8 @@ class Permutation(object):
         of degree at most ``n`` ordered lexicographically by word
         representation.
 
+        This is the inverse of `from_lehmer`.
+
         :param int n:
         :rtype: int
         :raises ValueError: if ``n`` is less than `degree`
@@ -216,6 +220,8 @@ class Permutation(object):
         is the permutation at index ``x`` (zero-based) in the list of all
         permutations of degree at most ``n`` ordered lexicographically by word
         representation.
+
+        This is the inverse of `lehmer`.
 
         :param int x: a nonnegative integer
         :param int n: the degree of the symmetric group with respect to which
@@ -289,6 +295,8 @@ class Permutation(object):
 
         When the permutation is the identity, `to_cycles()` returns an empty
         list.
+
+        This is the inverse of `from_cycles`.
 
         :return: the cycle decomposition of the permutation
         """
@@ -455,6 +463,8 @@ class Permutation(object):
 
         When the permutation is the identity, `to_image` called without an
         argument returns an empty tuple.
+
+        This is the inverse of the constructor.
 
         :param int n: the minimum length of the image to return
         :return: the image of 1 through either ``n`` or `degree` (whichever is
