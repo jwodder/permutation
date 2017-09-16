@@ -26,3 +26,20 @@ def test_lehmer(p, degree, lehmer):
 @pytest.mark.parametrize('p,degree,lehmer', PERMUTATIONS)
 def test_from_lehmer(p, degree, lehmer):
     assert Permutation.from_lehmer(lehmer, degree) == p
+
+@pytest.mark.parametrize('lehmer,degree', [
+    (1, 0),
+    (1, 1),
+    (6, 3),
+    (7, 3),
+    (24, 3),
+    (24, 4),
+    (25, 3),
+    (25, 4),
+    (-1, 0),
+    (-1, 3),
+    (5040, 5),
+])
+def test_bad_from_lehmer(lehmer, degree):
+    with pytest.raises(ValueError):
+        Permutation.from_lehmer(lehmer, degree)

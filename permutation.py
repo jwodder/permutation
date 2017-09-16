@@ -227,18 +227,21 @@ class Permutation(object):
         :param int n: the degree of the symmetric group with respect to which
             ``x`` was calculated
         :return: the `Permutation` with Lehmer code ``x``
-        :raises ValueError: if ``x`` is less than 0
+        :raises ValueError: if ``x`` is less than 0 or greater than or equal to
+            the factorial of ``n``
         """
         if x < 0:
             raise ValueError(x)
         mapping = []
+        x2 = x
         for i in range(1, n+1):
-            c = x % i
+            x2, c = divmod(x2, i)
             for (j,y) in enumerate(mapping):
                 if y >= c:
                     mapping[j] += 1
             mapping.insert(0,c)
-            x //= i
+        if x2 != 0:
+            raise ValueError(x)
         return cls(*(c+1 for c in mapping))
 
     def modified_lehmer(self):
