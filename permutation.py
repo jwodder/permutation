@@ -439,12 +439,12 @@ class Permutation(object):
         assert False
 
     @classmethod
-    def s_n(cls, n):
+    def group(cls, n):
         r"""
-        Generates all permutations in the symmetric group of degree ``n``,
-        i.e., all permutations with degree less than or equal to ``n``.  The
-        permutations are yielded in ascending order of their modified Lehmer
-        codes.
+        Generates all permutations in :math:`S_n`, the symmetric group of
+        degree ``n``, i.e., all permutations with degree less than or equal to
+        ``n``.  The permutations are yielded in ascending order of their
+        modified Lehmer codes.
 
         :param int n: a nonnegative integer
         :return: a generator of all `Permutation`\ s with degree ``n`` or less

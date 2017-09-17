@@ -30,7 +30,7 @@ S4 = [
 ]
 
 def test_s4():
-    for i,(p,q) in enumerate(zip_longest(Permutation.s_n(4), S4)):
+    for i,(p,q) in enumerate(zip_longest(Permutation.group(4), S4)):
         assert p == q
         assert p.modified_lehmer() == i
 
