@@ -460,19 +460,21 @@ class Permutation(object):
     def to_image(self, n=None):
         """
         Returns a tuple of the results of applying the permutation to the
-        integers 1 through ``n``, or through `degree` if ``n`` is unspecified
-        or less than `degree`.  If ``v = p.to_image()``, then ``v[0] == p(1)``,
-        ``v[1] == p(2)``, etc.
+        integers 1 through ``n``, or through `degree` if ``n`` is unspecified.
+        If ``v = p.to_image()``, then ``v[0] == p(1)``, ``v[1] == p(2)``, etc.
 
         When the permutation is the identity, `to_image` called without an
         argument returns an empty tuple.
 
         This is the inverse of the constructor.
 
-        :param int n: the minimum length of the image to return
-        :return: the image of 1 through either ``n`` or `degree` (whichever is
-            larger) under the permutation
+        :param int n: the length of the image to return; defaults to `degree`
+        :return: the image of 1 through ``n`` under the permutation
+        :rtype: tuple of ints
+        :raise ValueError: if ``n`` is less than `degree`
         """
+        if n is not None and n < self.degree:
+            raise ValueError(n)
         return self._map + tuple(range(self.degree+1, (n or self.degree)+1))
 
     def permute_seq(self, xs):
