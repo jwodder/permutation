@@ -45,8 +45,10 @@ class Permutation(object):
     @classmethod
     def identity(cls):
         """
-        The identity permutation, i.e., the permutation that returns all inputs
-        unchanged
+        Returns the identity permutation, i.e., the permutation that returns
+        all inputs unchanged
+
+        :rtype: Permutation
         """
         return cls()
 
@@ -90,11 +92,9 @@ class Permutation(object):
         >>> str(Permutation(2, 5, 4, 3, 1))
         '(1 2 5)(3 4)'
         """
-        cycles = self.to_cycles()
-        if cycles:
-            return ''.join('(' + ' '.join(map(str,cyc)) + ')' for cyc in cycles)
-        else:
-            return '1'
+        return ''.join(
+            '(' + ' '.join(map(str,cyc)) + ')' for cyc in self.to_cycles()
+        ) or '1'
 
     @classmethod
     def parse(cls, s):
@@ -156,7 +156,7 @@ class Permutation(object):
 
         :rtype: Permutation
         """
-        return type(self)(*self.permute_seq(range(1, self.degree+1)))
+        return type(self)(*self.permute(range(1, self.degree+1)))
 
     @property
     def order(self):
@@ -477,13 +477,12 @@ class Permutation(object):
             raise ValueError(n)
         return self._map + tuple(range(self.degree+1, (n or self.degree)+1))
 
-    def permute_seq(self, xs):
+    def permute(self, xs):
         """
-        Reorders the elements of a sequence according to the permutation; each
+        Reorder the elements of a sequence according to the permutation; each
         element at index ``i`` is moved to index ``p(i)``.
 
-        Note that ``p.permute_seq(range(1, p.degree+1)) ==
-        p.inverse().to_image()``.
+        Note that ``p.permute(range(1, p.degree+1)) == p.inverse().to_image()``.
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence

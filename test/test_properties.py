@@ -87,7 +87,7 @@ def test_from_image(p, image):
     assert Permutation(*image) == p
 
 @pytest.mark.parametrize('p,permuted', [(d.p, d.permuted) for d in PERMUTATIONS])
-def test_permute_seq(p, permuted):
-    assert p.permute_seq(range(1, p.degree+1)) == permuted
+def test_permute(p, permuted):
+    assert p.permute(range(1, p.degree+1)) == permuted
 
 # vim:set nowrap:
