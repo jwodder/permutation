@@ -100,7 +100,7 @@ class Permutation(object):
     def parse(cls, s):
         """
         Parse a permutation written in cycle notation.  This is the inverse of
-        `__str__` (though it also accepts input with superfluous whitespace).
+        `__str__`.
 
         :param str s: a permutation written in cycle notation
         :return: the permutation represented by ``s``
@@ -111,11 +111,11 @@ class Permutation(object):
         s = s.strip()
         if s == '1':
             return cls.identity()
-        if not s.startswith('('):
+        if not (s.startswith('(') and s.endswith(')')):
             raise ValueError(s)
         cycles = []
         for c in s[1:].split('('):
-            c = c.strip()
+            c = c.replace(',', ' ').strip()
             if not c.endswith(')'):
                 raise ValueError(s)
             cycles.append(int(x) for x in c[:-1].split())
@@ -292,8 +292,8 @@ class Permutation(object):
         around to ``c[0]``.  The permutation is then the product of these
         cycles.
 
-        Each cycle is at least 2 elements in size and places its smallest
-        element at index 0.  Cycles are ordered by their index 0's in
+        Each cycle is at least two elements in length and places its smallest
+        element first.  Cycles are ordered by their first elements in
         increasing order.  No two cycles share an element.
 
         When the permutation is the identity, `to_cycles()` returns an empty
