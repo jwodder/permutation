@@ -32,10 +32,14 @@ def test_from_cycles(cycles, p):
 @pytest.mark.parametrize('s,p', [
     ('1',              Permutation()),
     ('()',             Permutation()),
+    ('(  )',           Permutation()),
     ('(5)',            Permutation()),
     (' ( 5 ) ',        Permutation()),
     ('(1 2) (2 1)',    Permutation()),
     ('(1 2 3)',        Permutation(2,3,1)),
+    ('( 1 2 3 )',      Permutation(2,3,1)),
+    ('( 1,2,3 )',      Permutation(2,3,1)),
+    ('( 1 , 2 , 3 )',  Permutation(2,3,1)),
     (' (1  2  3) \n ', Permutation(2,3,1)),
     ('\t\n(1\r2\r3)',  Permutation(2,3,1)),
     ('(1 2 3) ()',     Permutation(2,3,1)),
@@ -44,10 +48,12 @@ def test_from_cycles(cycles, p):
     ('(1 2 3) (2 1)',  Permutation(3,2,1)),
     ('(2 1) (1 2 3)',  Permutation(1,3,2)),
     ('(1 2) (3 4 5)',  Permutation(2,1,4,5,3)),
+    ('(3 4 5)(1 2)',   Permutation(2,1,4,5,3)),
+    ('(3,4,5)(1,2)',   Permutation(2,1,4,5,3)),
     ('(3 4 5) (1 2)',  Permutation(2,1,4,5,3)),
     ('(3,4,5) (1,2)',  Permutation(2,1,4,5,3)),
-    ('(3,4,5),(1,2)',  Permutation(2,1,4,5,3)),
     ('(3 4 5),(1 2)',  Permutation(2,1,4,5,3)),
+    ('(3,4,5),(1,2)',  Permutation(2,1,4,5,3)),
 ])
 def test_parse(s,p):
     assert Permutation.parse(s) == p
@@ -89,6 +95,7 @@ def test_bad_from_cycles(cycles):
     '(one two)',
     '1 (1 2 3)',
     '(1 2 3',
+    '1 2 3)',
     '[1 2 3]',
     '1,2,3',
     '(1 2 -1)',
@@ -99,9 +106,11 @@ def test_bad_from_cycles(cycles):
     '((3 4 5) (1 2))',
     '(3 4 5, 4 2)',
     '(3 4 5 4 2)',
-    pytest.param('(,)', marks=pytest.mark.xfail),
+    '(,)',
     ',(1 2 3)',
     '(1 2 3),',
+    '(,1 2 3)',
+    '(1 2 3,)',
 ])
 def test_bad_parse(s):
     with pytest.raises(ValueError):

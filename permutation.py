@@ -10,6 +10,7 @@ from   fractions import gcd
 from   functools import reduce
 from   itertools import starmap
 import operator
+import re
 
 __all__ = ["Permutation"]
 
@@ -114,11 +115,10 @@ class Permutation(object):
         if not (s.startswith('(') and s.endswith(')')):
             raise ValueError(s)
         cycles = []
-        for c in s[1:].split('('):
-            c = c.replace(',', ' ').strip()
-            if not c.endswith(')'):
-                raise ValueError(s)
-            cycles.append(int(x) for x in c[:-1].split())
+        for cyc in re.split(r'\)[\s,]*\(', s[1:-1]):
+            cyc = cyc.strip()
+            if cyc:
+                cycles.append(map(int, re.split(r'[\s,]+', cyc)))
         return cls.from_cycles(*cycles)
 
     def __nonzero__(self):
