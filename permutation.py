@@ -457,10 +457,12 @@ class Permutation(object):
         Reorder the elements of a sequence according to the permutation; each
         element at index ``i`` is moved to index ``p(i)``.
 
-        Note that ``p.permute(range(1, p.degree+1)) == p.inverse().to_image()``.
+        Note that ``p.permute(range(1, n+1)) == p.inverse().to_image(n)`` for
+        all integers ``n`` greater than or equal to `degree`.
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence
+        :rtype: tuple
         :raise ValueError: if ``len(xs)`` is less than `degree`
         """
         xs = list(xs)
