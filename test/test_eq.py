@@ -7,7 +7,6 @@ EQUIV_CLASSES = [
         Permutation(1),
         Permutation(1,2),
         Permutation(1,2,3,4,5),
-        Permutation.transposition(2,2),
         Permutation.cycle(),
         Permutation.from_cycles(),
         Permutation.from_cycles(()),
@@ -16,11 +15,10 @@ EQUIV_CLASSES = [
     [
         Permutation(2,1),
         Permutation(2,1,3,4,5),
-        Permutation.transposition(1,2),
-        Permutation.transposition(2,1),
         Permutation.cycle(1,2),
         Permutation.cycle(2,1),
         Permutation.from_cycles((1,2)),
+        Permutation.from_cycles((2,1)),
     ],
 
     [
@@ -48,8 +46,6 @@ EQUIV_CLASSES = [
     [
         Permutation(3,2,1),
         Permutation(3,2,1,4,5),
-        Permutation.transposition(1,3),
-        Permutation.transposition(3,1),
         Permutation.cycle(1,3),
         Permutation.cycle(3,1),
         Permutation.from_cycles((1,3)),

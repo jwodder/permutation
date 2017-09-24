@@ -171,7 +171,7 @@ class Permutation(object):
     def is_even(self):
         """
         Whether the permutation is even, i.e., can be expressed as the product
-        of an even number of transpositions
+        of an even number of transpositions (cycles of length 2)
         """
         return not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
 
@@ -318,31 +318,6 @@ class Permutation(object):
         return cycles
 
     @classmethod
-    def transposition(cls, a, b):
-        """
-        Returns the `transposition
-        <https://en.wikipedia.org/wiki/Cyclic_permutation#Transpositions>`_ of
-        ``a`` and ``b``, i.e., the permutation that maps ``a`` to ``b``, maps
-        ``b`` to ``a``, and leaves all other values unchanged.  When ``a``
-        equals ``b``, `transposition` returns `identity`.
-
-        :param int a: a positive integer
-        :param int b: a positive integer
-        :return: the transposition of ``a`` and ``b``
-        :rtype: Permutation
-        :raises ValueError: if ``a`` or ``b`` is less than 1
-        """
-        if a < 1:
-            raise ValueError(a)
-        elif b < 1:
-            raise ValueError(b)
-        elif a == b:
-            return cls()
-        else:
-            return cls(*(b if x == a else a if x == b else x
-                         for x in range(1, max(a,b)+1)))
-
-    @classmethod
     def cycle(cls, *cyc):
         """
         Construct a `cyclic permutation
@@ -416,7 +391,7 @@ class Permutation(object):
                 map2[:i] = reversed(map2[:i])
                 return type(self)(*map2)
         d = max(self.degree, 1)
-        return type(self).transposition(d, d+1)
+        return type(self).cycle(d, d+1)
 
     def prev_permutation(self):
         """

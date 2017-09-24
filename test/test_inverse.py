@@ -3,12 +3,12 @@ from   permutation import Permutation
 
 @pytest.mark.parametrize('p,q', [
     (Permutation.identity(),                     Permutation.identity()),
-    (Permutation.transposition(1,2),             Permutation.transposition(1,2)),
-    (Permutation.transposition(2,1),             Permutation.transposition(1,2)),
-    (Permutation.transposition(2,3),             Permutation.transposition(2,3)),
+    (Permutation.cycle(1,2),                     Permutation.cycle(1,2)),
+    (Permutation.cycle(2,1),                     Permutation.cycle(1,2)),
+    (Permutation.cycle(2,3),                     Permutation.cycle(2,3)),
     (Permutation.cycle(1,3,2),                   Permutation.cycle(1,2,3)),
-    (Permutation.transposition(1,3),             Permutation.transposition(1,3)),
-    (Permutation.transposition(3,4),             Permutation.transposition(3,4)),
+    (Permutation.cycle(1,3),                     Permutation.cycle(1,3)),
+    (Permutation.cycle(3,4),                     Permutation.cycle(3,4)),
     (Permutation.from_cycles((1,2),(3,4)),       Permutation.from_cycles((1,2),(3,4))),
     (Permutation.cycle(1,2,3,4),                 Permutation.cycle(4,3,2,1)),
     (Permutation.from_cycles((1,2,3),(4,5)),     Permutation.from_cycles((3,2,1),(4,5))),

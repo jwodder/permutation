@@ -1,23 +1,14 @@
 import pytest
 from   permutation import Permutation
 
-@pytest.mark.parametrize('a,b,p', [
-    (1, 1, Permutation()),
-    (1, 2, Permutation(2,1)),
-    (2, 1, Permutation(2,1)),
-    (4, 7, Permutation(1,2,3,7,5,6,4)),
-    (7, 4, Permutation(1,2,3,7,5,6,4)),
-    (7, 7, Permutation()),
-])
-def test_transposition(a,b,p):
-    assert Permutation.transposition(a,b) == p
-
 @pytest.mark.parametrize('cyc,p', [
     ((), Permutation()),
     ((1,), Permutation()),
     ((1,2), Permutation(2,1)),
     ((2,1), Permutation(2,1)),
     ((1,2,3,4), Permutation(2,3,4,1)),
+    ((4,7), Permutation(1,2,3,7,5,6,4)),
+    ((7,4), Permutation(1,2,3,7,5,6,4)),
 ])
 def test_cycle(cyc, p):
     assert Permutation.cycle(*cyc) == p
@@ -61,19 +52,13 @@ def test_from_cycles(cycles, p):
 def test_parse(s,p):
     assert Permutation.parse(s) == p
 
-@pytest.mark.parametrize('a,b', [
-    (1,0),
-    (0,1),
-    (0,0),
-    (-1, 5),
-    (5, -1),
-    (-1, -1),
-])
-def test_bad_transposition(a,b):
-    with pytest.raises(ValueError):
-        Permutation.transposition(a,b)
-
 @pytest.mark.parametrize('cyc', [
+    [1,0],
+    [0,1],
+    [0,0],
+    [-1, 5],
+    [5, -1],
+    [-1, -1],
     [-1],
     [1, 2, -1],
     [-1, -2, -3],
