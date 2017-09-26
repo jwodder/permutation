@@ -411,7 +411,7 @@ class Permutation(object):
                 map2[i], map2[j] = map2[j], map2[i]
                 map2[:i] = reversed(map2[:i])
                 return type(self)(*map2)
-        assert False
+        assert False  # pragma: no cover
 
     @classmethod
     def group(cls, n):
