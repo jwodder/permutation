@@ -7,8 +7,9 @@ python:
     - '3.6'
     - pypy
 install:
-    - pip install coveralls tox
+    - pip install codecov coveralls tox
 script:
     - tox -e py
 after_success:
+    - codecov
     - coveralls
