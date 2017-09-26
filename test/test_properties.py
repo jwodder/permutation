@@ -54,6 +54,10 @@ def test_modified_lehmer(p, code):
 def test_from_modified_lehmer(p, code):
     assert Permutation.from_modified_lehmer(code) == p
 
+def test_bad_from_modified_lehmer():
+    with pytest.raises(ValueError):
+        Permutation.from_modified_lehmer(-1)
+
 @pytest.mark.parametrize('p,cycles', [(d.p, d.cycles) for d in PERMUTATIONS])
 def test_to_cycles(p, cycles):
     assert p.to_cycles() == cycles
@@ -98,5 +102,10 @@ def test_from_image(p, image):
 @pytest.mark.parametrize('p,permuted', [(d.p, d.permuted) for d in PERMUTATIONS])
 def test_permute(p, permuted):
     assert p.permute(range(1, p.degree+1)) == permuted
+
+@pytest.mark.parametrize('p,degree', [(d.p, d.degree) for d in PERMUTATIONS if d.degree > 0])
+def test_bad_permute(p, degree):
+    with pytest.raises(ValueError):
+        p.permute(range(1, p.degree))
 
 # vim:set nowrap:

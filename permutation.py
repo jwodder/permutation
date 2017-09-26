@@ -427,10 +427,14 @@ class Permutation(object):
         """
         if n < 0:
             raise ValueError(n)
-        p = cls()
-        while p.degree <= n:
-            yield p
-            p = p.next_permutation()
+        # Use a nested function as the actual generator so that the ValueError
+        # above can be raised immediately:
+        def sn():
+            p = cls()
+            while p.degree <= n:
+                yield p
+                p = p.next_permutation()
+        return sn()
 
     def to_image(self, n=None):
         """

@@ -47,3 +47,11 @@ def test_prev_permutation():
 def test_prev_permutation_identity():
     with pytest.raises(ValueError):
         Permutation.identity().prev_permutation()
+
+def test_s0():
+    assert list(Permutation.group(0)) == [Permutation()]
+    assert list(Permutation.group(1)) == [Permutation()]
+
+def test_bad_group():
+    with pytest.raises(ValueError):
+        Permutation.group(-1)

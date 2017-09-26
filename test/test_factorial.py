@@ -61,6 +61,15 @@ FACTORIAL = [
 def test_to_factorial_base(n, digits):
     assert to_factorial_base(n) == digits
 
+def test_bad_to_factorial_base():
+    with pytest.raises(ValueError):
+        to_factorial_base(-1)
+
 @pytest.mark.parametrize('n,digits', FACTORIAL)
 def test_from_factorial_base(n, digits):
     assert from_factorial_base(digits) == n
+
+@pytest.mark.parametrize('digits', [(-1,), (2,), (1,2), (3,0), (4,1,2)])
+def test_bad_from_factorial_base(digits):
+    with pytest.raises(ValueError):
+        from_factorial_base(digits)
