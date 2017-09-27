@@ -118,7 +118,7 @@ class Permutation(object):
         for cyc in re.split(r'\)[\s,]*\(', s[1:-1]):
             cyc = cyc.strip()
             if cyc:
-                cycles.append(map(int, re.split(r'[\s,]+', cyc)))
+                cycles.append(map(int, re.split(r'\s*,\s*|\s+', cyc)))
         return cls.from_cycles(*cycles)
 
     def __nonzero__(self):

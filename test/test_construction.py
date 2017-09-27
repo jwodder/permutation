@@ -36,6 +36,9 @@ def test_from_cycles(cycles, p):
     ('(5)',            Permutation()),
     (' ( 5 ) ',        Permutation()),
     ('(1 2) (2 1)',    Permutation()),
+    ('(1 2)',          Permutation(2,1)),
+    ('(1, 2)',         Permutation(2,1)),
+    ('(1 ,2)',         Permutation(2,1)),
     ('(1 2 3)',        Permutation(2,3,1)),
     ('( 1 2 3 )',      Permutation(2,3,1)),
     ('( 1,2,3 )',      Permutation(2,3,1)),
@@ -111,6 +114,8 @@ def test_bad_from_cycles(cycles):
     '(1 2 3),',
     '(,1 2 3)',
     '(1 2 3,)',
+    '(1,,2)',
+    '(1, ,2)',
 ])
 def test_bad_parse(s):
     with pytest.raises(ValueError):
