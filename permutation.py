@@ -41,7 +41,7 @@ class Permutation(object):
             used[i-1] = True
         while d > 0 and img[d-1] == d:
             d -= 1
-        self._map = img[:d]
+        self.__map = img[:d]
 
     @classmethod
     def identity(cls):
@@ -61,7 +61,7 @@ class Permutation(object):
         :param int i:
         :return: the image of ``i`` under the permutation
         """
-        return self._map[i-1] if 0 < i <= len(self._map) else i
+        return self.__map[i-1] if 0 < i <= len(self.__map) else i
 
     def __mul__(self, other):
         """
@@ -76,7 +76,7 @@ class Permutation(object):
                             for i in range(max(self.degree, other.degree))))
 
     def __repr__(self):
-        return '{0.__module__}.{0.__name__}{1!r}'.format(type(self), self._map)
+        return '{0.__module__}.{0.__name__}{1!r}'.format(type(self), self.__map)
 
     def __str__(self):
         """
@@ -123,13 +123,13 @@ class Permutation(object):
 
     def __nonzero__(self):
         """ A `Permutation` is true iff it is not the identity """
-        return self._map != ()
+        return self.__map != ()
 
     __bool__ = __nonzero__
 
     def __eq__(self, other):
         if type(self) is type(other):
-            return self._map == other._map
+            return self.__map == other.__map
         else:
             return NotImplemented
 
@@ -137,7 +137,7 @@ class Permutation(object):
         return not (self == other)
 
     def __hash__(self):
-        return hash(self._map)
+        return hash(self.__map)
 
     @property
     def degree(self):
@@ -146,7 +146,7 @@ class Permutation(object):
         permutes (does not map to itself), or 0 if there is no such integer
         (i.e., if the permutation is the identity)
         """
-        return len(self._map)
+        return len(self.__map)
 
     def inverse(self):
         """
@@ -303,7 +303,7 @@ class Permutation(object):
 
         :return: the cycle decomposition of the permutation
         """
-        cmap = list(self._map)
+        cmap = list(self.__map)
         cycles = []
         for i in range(len(cmap)):
             if cmap[i] not in (0, i+1):
@@ -377,11 +377,11 @@ class Permutation(object):
         :rtype: bool
         """
         return all(i+1 in (a,b)
-                   for (i,(a,b)) in enumerate(zip(self._map, other._map)))
+                   for (i,(a,b)) in enumerate(zip(self.__map, other.__map)))
 
     def next_permutation(self):
         """ Returns the next `Permutation` in modified Lehmer code order """
-        map2 = list(self._map)
+        map2 = list(self.__map)
         for i in range(1, len(map2)):
             if map2[i] > map2[i-1]:
                 j = 0
@@ -402,7 +402,7 @@ class Permutation(object):
         """
         if self.degree < 2:
             raise ValueError('cannot decrement identity')
-        map2 = list(self._map)
+        map2 = list(self.__map)
         for i in range(1, len(map2)):
             if map2[i] < map2[i-1]:
                 j = 0
@@ -454,7 +454,7 @@ class Permutation(object):
         """
         if n is not None and n < self.degree:
             raise ValueError(n)
-        return self._map + tuple(range(self.degree+1, (n or self.degree)+1))
+        return self.__map + tuple(range(self.degree+1, (n or self.degree)+1))
 
     def permute(self, xs):
         """
