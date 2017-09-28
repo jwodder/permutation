@@ -2,7 +2,7 @@ import pytest
 from   permutation import Permutation
 
 @pytest.mark.parametrize('p,q', [
-    (Permutation.identity(),                     Permutation.identity()),
+    (Permutation(),                              Permutation()),
     (Permutation.cycle(1,2),                     Permutation.cycle(1,2)),
     (Permutation.cycle(2,1),                     Permutation.cycle(1,2)),
     (Permutation.cycle(2,3),                     Permutation.cycle(2,3)),
@@ -22,6 +22,6 @@ from   permutation import Permutation
 def test_inverse(p,q):
     assert p.inverse() == q
     assert q.inverse() == p
-    assert p*q == q*p == Permutation.identity()
+    assert p*q == q*p == Permutation()
 
 # vim:set nowrap:

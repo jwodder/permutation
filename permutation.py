@@ -15,7 +15,7 @@ import re
 __all__ = ["Permutation"]
 
 class Permutation(object):
-    """
+    r"""
     A `Permutation` object represents a permutation of finitely many positive
     integers, i.e., a bijective function from some integer range :math:`[1,n]`
     to itself.
@@ -25,7 +25,10 @@ class Permutation(object):
     under the permutation.  For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is
     the permutation that maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and
     6 to 2.  ``Permutation()`` (with no arguments) evaluates to the identity
-    permutation.
+    permutation (i.e., the permutation that returns all inputs unchanged).
+
+    `Permutation`\ s are hashable and immutable.  They can be compared for
+    equality but not for ordering/sorting.
     """
 
     def __init__(self, *img):
@@ -42,16 +45,6 @@ class Permutation(object):
         while d > 0 and img[d-1] == d:
             d -= 1
         self.__map = img[:d]
-
-    @classmethod
-    def identity(cls):
-        """
-        Returns the identity permutation, i.e., the permutation that returns
-        all inputs unchanged
-
-        :rtype: Permutation
-        """
-        return cls()
 
     def __call__(self, i):
         """
@@ -86,7 +79,7 @@ class Permutation(object):
         written as a parenthesized space-separated sequence of integers, and
         the cycles are concatenated.
 
-        ``str(Permutation.identity())`` is ``"1"``.
+        ``str(Permutation())`` is ``"1"``.
 
         This is the inverse of `parse`.
 
@@ -111,7 +104,7 @@ class Permutation(object):
         """
         s = s.strip()
         if s == '1':
-            return cls.identity()
+            return cls()
         if not (s.startswith('(') and s.endswith(')')):
             raise ValueError(s)
         cycles = []

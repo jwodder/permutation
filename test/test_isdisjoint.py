@@ -2,7 +2,7 @@ import pytest
 from   permutation import Permutation
 
 S4 = [
-    Permutation.identity(),
+    Permutation(),
     Permutation.from_cycles((1,2)),
     Permutation.from_cycles((2,3)),
     Permutation.from_cycles((1,3,2)),

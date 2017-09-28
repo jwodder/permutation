@@ -3,7 +3,7 @@ from   six.moves   import zip_longest
 from   permutation import Permutation
 
 S4 = [
-    Permutation.identity(),
+    Permutation(),
     Permutation.from_cycles((1,2)),
     Permutation.from_cycles((2,3)),
     Permutation.from_cycles((1,3,2)),
@@ -46,7 +46,7 @@ def test_prev_permutation():
 
 def test_prev_permutation_identity():
     with pytest.raises(ValueError):
-        Permutation.identity().prev_permutation()
+        Permutation().prev_permutation()
 
 def test_s0():
     assert list(Permutation.group(0)) == [Permutation()]
