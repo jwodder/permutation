@@ -237,15 +237,19 @@ class Permutation(object):
             raise ValueError(x)
         return cls(*(c+1 for c in mapping))
 
-    def modified_lehmer(self):
+    def left_lehmer(self):
         """
         Encode the permutation as a nonnegative integer using a modified form
-        of `Lehmer codes <https://en.wikipedia.org/wiki/Lehmer_code>`_.  This
-        encoding establishes a bijection between permutations and nonnegative
-        integers, with `from_modified_lehmer()` converting values in the
-        opposite direction.
+        of `Lehmer codes <https://en.wikipedia.org/wiki/Lehmer_code>`_ that
+        uses `the left inversion count <inversion_>`_ instead of the right
+        inversion count.  This modified encoding establishes a
+        degree-independent bijection between permutations and nonnegative
+        integers, with `from_left_lehmer()` converting values in the opposite
+        direction.
 
-        :return: the permutation's modified Lehmer code
+        .. _inversion: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_related_vectors
+
+        :return: the permutation's left Lehmer code
         :rtype: int
         """
         left = list(range(self.degree, 0, -1))
@@ -257,13 +261,13 @@ class Permutation(object):
         return from_factorial_base(digits[:-1])
 
     @classmethod
-    def from_modified_lehmer(cls, x):
+    def from_left_lehmer(cls, x):
         """
-        Returns the permutation with the given modified Lehmer code.  This is
-        the inverse of `modified_lehmer()`.
+        Returns the permutation with the given left Lehmer code.  This is the
+        inverse of `left_lehmer()`.
 
         :param int x: a nonnegative integer
-        :return: the `Permutation` with modified Lehmer code ``x``
+        :return: the `Permutation` with left Lehmer code ``x``
         :raises ValueError: if ``x`` is less than 0
         """
         if x < 0:
@@ -373,7 +377,7 @@ class Permutation(object):
                    for (i,(a,b)) in enumerate(zip(self.__map, other.__map)))
 
     def next_permutation(self):
-        """ Returns the next `Permutation` in modified Lehmer code order """
+        """ Returns the next `Permutation` in left Lehmer code order """
         map2 = list(self.__map)
         for i in range(1, len(map2)):
             if map2[i] > map2[i-1]:
@@ -388,7 +392,7 @@ class Permutation(object):
 
     def prev_permutation(self):
         """
-        Returns the previous `Permutation` in modified Lehmer code order
+        Returns the previous `Permutation` in left Lehmer code order
 
         :raises ValueError: if called on the identity `Permutation` (which has
             no predecessor)
@@ -411,8 +415,8 @@ class Permutation(object):
         r"""
         Generates all permutations in :math:`S_n`, the symmetric group of
         degree ``n``, i.e., all permutations with degree less than or equal to
-        ``n``.  The permutations are yielded in ascending order of their
-        modified Lehmer codes.
+        ``n``.  The permutations are yielded in ascending order of their left
+        Lehmer codes.
 
         :param int n: a nonnegative integer
         :return: a generator of all `Permutation`\ s with degree ``n`` or less

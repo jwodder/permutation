@@ -47,16 +47,16 @@ def test_sign(p, sign):
     assert p.sign == sign
 
 @pytest.mark.parametrize('p,code', [(d.p, d.mod_lehmer) for d in PERMUTATIONS])
-def test_modified_lehmer(p, code):
-    assert p.modified_lehmer() == code
+def test_left_lehmer(p, code):
+    assert p.left_lehmer() == code
 
 @pytest.mark.parametrize('p,code', [(d.p, d.mod_lehmer) for d in PERMUTATIONS])
-def test_from_modified_lehmer(p, code):
-    assert Permutation.from_modified_lehmer(code) == p
+def test_from_left_lehmer(p, code):
+    assert Permutation.from_left_lehmer(code) == p
 
-def test_bad_from_modified_lehmer():
+def test_bad_from_left_lehmer():
     with pytest.raises(ValueError):
-        Permutation.from_modified_lehmer(-1)
+        Permutation.from_left_lehmer(-1)
 
 @pytest.mark.parametrize('p,cycles', [(d.p, d.cycles) for d in PERMUTATIONS])
 def test_to_cycles(p, cycles):
