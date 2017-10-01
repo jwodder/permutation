@@ -1,10 +1,25 @@
-.. module:: permutation
+.. image:: http://www.repostatus.org/badges/latest/wip.svg
+    :target: http://www.repostatus.org/#wip
+    :alt: Project Status: WIP — Initial development is in progress, but there
+          has not yet been a stable, usable release suitable for the public.
 
-=============================================================
-permutation — Permutations of finitely many positive integers
-=============================================================
+.. image:: https://travis-ci.org/jwodder/permutation.svg?branch=master
+    :target: https://travis-ci.org/jwodder/permutation
 
-``permutation`` provides a `Permutation` class for representing `permutations
+.. image:: https://coveralls.io/repos/github/jwodder/permutation/badge.svg?branch=master
+    :target: https://coveralls.io/github/jwodder/permutation?branch=master
+
+.. image:: https://codecov.io/gh/jwodder/permutation/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/jwodder/permutation
+
+.. image:: https://img.shields.io/github/license/jwodder/permutation.svg
+    :target: https://opensource.org/licenses/MIT
+    :alt: MIT License
+
+`GitHub <https://github.com/jwodder/permutation>`_
+| `Issues <https://github.com/jwodder/permutation/issues>`_
+
+``permutation`` provides a ``Permutation`` class for representing `permutations
 <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
 integers in Python.  Supported operations & properties include inverses, (group
 theoretic) order, parity, composition/multiplication, cycle decomposition,
@@ -55,16 +70,3 @@ Examples
     (1 3 2)
     (1 2 3)
     (1 3)
-
-API
-===
-
-.. autoclass:: Permutation
-    :special-members:
-    :no-undoc-members:
-    :exclude-members: __weakref__
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`search`

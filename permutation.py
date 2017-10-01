@@ -1,4 +1,15 @@
-""" Permutations of finitely many positive integers """
+"""
+Permutations of finitely many positive integers
+
+``permutation`` provides a ``Permutation`` class for representing `permutations
+<https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
+integers in Python.  Supported operations & properties include inverses, (group
+theoretic) order, parity, composition/multiplication, cycle decomposition,
+cycle notation, word representation, Lehmer codes, and, of course, use as a
+callable on integers.
+
+Visit <https://github.com/jwodder/permutation> for more information.
+"""
 
 __version__      = '0.1.0.dev1'
 __author__       = 'John Thorvald Wodder II'
@@ -16,7 +27,8 @@ __all__ = ["Permutation"]
 
 class Permutation(object):
     r"""
-    A `Permutation` object represents a permutation of finitely many positive
+    A `Permutation` object represents a `permutation
+    <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
     integers, i.e., a bijective function from some integer range :math:`[1,n]`
     to itself.
 
@@ -154,7 +166,8 @@ class Permutation(object):
     @property
     def order(self):
         """
-        The order of the permutation, i.e., the smallest positive integer
+        The `order <https://en.wikipedia.org/wiki/Order_(group_theory)>`_
+        (a.k.a. period) of the permutation, i.e., the smallest positive integer
         :math:`n` such that multiplying :math:`n` copies of the permutation
         together produces the identity
         """
@@ -377,7 +390,10 @@ class Permutation(object):
                    for (i,(a,b)) in enumerate(zip(self.__map, other.__map)))
 
     def next_permutation(self):
-        """ Returns the next `Permutation` in left Lehmer code order """
+        """
+        Returns the next `Permutation` in `left Lehmer code
+        <#permutation.Permutation.left_lehmer>`_ order
+        """
         map2 = list(self.__map)
         for i in range(1, len(map2)):
             if map2[i] > map2[i-1]:
@@ -392,7 +408,8 @@ class Permutation(object):
 
     def prev_permutation(self):
         """
-        Returns the previous `Permutation` in left Lehmer code order
+        Returns the previous `Permutation` in `left Lehmer code
+        <#permutation.Permutation.left_lehmer>`_ order
 
         :raises ValueError: if called on the identity `Permutation` (which has
             no predecessor)
@@ -415,8 +432,8 @@ class Permutation(object):
         r"""
         Generates all permutations in :math:`S_n`, the symmetric group of
         degree ``n``, i.e., all permutations with degree less than or equal to
-        ``n``.  The permutations are yielded in ascending order of their left
-        Lehmer codes.
+        ``n``.  The permutations are yielded in ascending order of their `left
+        Lehmer codes <#permutation.Permutation.left_lehmer>`_.
 
         :param int n: a nonnegative integer
         :return: a generator of all `Permutation`\ s with degree ``n`` or less
