@@ -1,2 +1,5 @@
 Sphinx~=1.5
 sphinx_rtd_theme~=0.2.0
+
+# Force using an up-to-date setuptools on Read the Docs:
+setuptools>=34.4.0
