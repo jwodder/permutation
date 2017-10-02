@@ -17,6 +17,7 @@
     :alt: MIT License
 
 `GitHub <https://github.com/jwodder/permutation>`_
+| `Documentation <https://permutation.readthedocs.io>`_
 | `Issues <https://github.com/jwodder/permutation/issues>`_
 
 ``permutation`` provides a ``Permutation`` class for representing `permutations

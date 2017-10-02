@@ -8,7 +8,8 @@ theoretic) order, parity, composition/multiplication, cycle decomposition,
 cycle notation, word representation, Lehmer codes, and, of course, use as a
 callable on integers.
 
-Visit <https://github.com/jwodder/permutation> for more information.
+Visit <https://github.com/jwodder/permutation> or <http://permutation.rtfd.io>
+for more information.
 """
 
 __version__      = '0.1.0.dev1'
@@ -493,6 +494,7 @@ class Permutation(object):
 
 
 def lcm(x,y):
+    """ Calculate the least common multiple of ``x`` and ``y`` """
     d = gcd(x,y)
     return 0 if d == 0 else abs(x*y) // d
 
@@ -501,7 +503,7 @@ def to_factorial_base(n):
     Convert a nonnegative integer to its representation in the `factorial
     number system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
     (represented as a list of digits in descending order of place value, not
-    including the final zero digit sometimes appended for the 0! place)
+    including the final zero digit sometimes appended for the :math:`0!` place)
     """
     if n < 0:
         raise ValueError(n)
