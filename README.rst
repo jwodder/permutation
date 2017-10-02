@@ -1,7 +1,7 @@
-.. image:: http://www.repostatus.org/badges/latest/wip.svg
-    :target: http://www.repostatus.org/#wip
-    :alt: Project Status: WIP — Initial development is in progress, but there
-          has not yet been a stable, usable release suitable for the public.
+.. image:: http://www.repostatus.org/badges/latest/active.svg
+    :target: http://www.repostatus.org/#active
+    :alt: Project Status: Active — The project has reached a stable, usable
+          state and is being actively developed.
 
 .. image:: https://travis-ci.org/jwodder/permutation.svg?branch=master
     :target: https://travis-ci.org/jwodder/permutation
@@ -12,11 +12,15 @@
 .. image:: https://codecov.io/gh/jwodder/permutation/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/permutation
 
+.. image:: https://img.shields.io/pypi/pyversions/permutation.svg
+    :target: https://pypi.python.org/pypi/permutation
+
 .. image:: https://img.shields.io/github/license/jwodder/permutation.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
 `GitHub <https://github.com/jwodder/permutation>`_
+| `PyPI <https://pypi.python.org/pypi/permutation>`_
 | `Documentation <https://permutation.readthedocs.io>`_
 | `Issues <https://github.com/jwodder/permutation/issues>`_
 
