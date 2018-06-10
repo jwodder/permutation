@@ -6,9 +6,6 @@
 .. image:: https://travis-ci.org/jwodder/permutation.svg?branch=master
     :target: https://travis-ci.org/jwodder/permutation
 
-.. image:: https://coveralls.io/repos/github/jwodder/permutation/badge.svg?branch=master
-    :target: https://coveralls.io/github/jwodder/permutation?branch=master
-
 .. image:: https://codecov.io/gh/jwodder/permutation/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/permutation
 
