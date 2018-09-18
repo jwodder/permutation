@@ -18,11 +18,17 @@ __author_email__ = 'permutation@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/permutation'
 
-from   fractions import gcd
 from   functools import reduce
 from   itertools import starmap
 import operator
 import re
+
+try:
+    # Importing fractions.gcd unconditionally produces a DeprecationWarning in
+    # 3.5+, so we need to use math.gcd whenever it's available.
+    from math      import gcd
+except ImportError:
+    from fractions import gcd
 
 __all__ = ["Permutation"]
 
