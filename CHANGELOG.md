@@ -1,5 +1,5 @@
-v0.2.0 (in development)
------------------------
+v0.1.1 (2018-09-18)
+-------------------
 - Drop support for Python 3.3
 - Fix a DeprecationWarning in Python 3.5+
 
