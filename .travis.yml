@@ -1,4 +1,5 @@
 language: python
+cache: pip
 jobs:
     include:
         - python: 2.7
