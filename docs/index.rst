@@ -4,6 +4,11 @@
 permutation — Permutations of finitely many positive integers
 =============================================================
 
+`GitHub <https://github.com/jwodder/permutation>`_
+| `PyPI <https://pypi.org/project/permutation>`_
+| `Documentation <https://permutation.readthedocs.io>`_
+| `Issues <https://github.com/jwodder/permutation/issues>`_
+
 ``permutation`` provides a `Permutation` class for representing `permutations
 <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
 integers in Python.  Supported operations & properties include inverses, (group
