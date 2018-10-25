@@ -10,14 +10,17 @@
     :target: https://codecov.io/gh/jwodder/permutation
 
 .. image:: https://img.shields.io/pypi/pyversions/permutation.svg
-    :target: https://pypi.python.org/pypi/permutation
+    :target: https://pypi.org/project/permutation
 
 .. image:: https://img.shields.io/github/license/jwodder/permutation.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
+.. image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
+    :target: https://saythanks.io/to/jwodder
+
 `GitHub <https://github.com/jwodder/permutation>`_
-| `PyPI <https://pypi.python.org/pypi/permutation>`_
+| `PyPI <https://pypi.org/project/permutation>`_
 | `Documentation <https://permutation.readthedocs.io>`_
 | `Issues <https://github.com/jwodder/permutation/issues>`_
 
