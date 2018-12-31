@@ -498,6 +498,22 @@ class Permutation(object):
             out[self(i+1)-1] = xs[i]
         return tuple(out)
 
+    def inversion_number(self):
+        """
+        Calculate the `Inversion number`_ of the permutation
+        This is the number of pairs of numbers which are in the opposite order
+        after applying the permutation.
+        This is also the Kendall tau distance from the identity permutation.
+        This is also the sum of the terms in the lehmer code.
+
+
+        .. _Inversion number: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_number>
+
+        :return: the number of inversions in the permutation
+        :rtype: int
+        """
+        return sum(to_factorial_base(self.lehmer(self.degree)))
+
 
 def lcm(x,y):
     """ Calculate the least common multiple of ``x`` and ``y`` """
