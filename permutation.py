@@ -201,6 +201,37 @@ class Permutation(object):
         """
         return 1 if self.is_even else -1
 
+    def right_inversion_count(self, n=None):
+        """
+        Calculate the `right inversion count`_ or right inversion vector of the
+        permutation through degree ``n``, or through `degree` if ``n`` is
+        unspecified.  The result is a list of ``n`` elements in which the
+        element at index ``i`` corresponds to the number of right inversions
+        for ``i+1``, i.e., the number of values ``x > i+1`` for which ``p(x) <
+        p(i+1)``.
+
+        Setting ``n`` larger than `degree` causes the resulting list to have
+        trailing zeroes, which become relevant when converting to & from Lehmer
+        codes and factorial base.
+
+        .. _right inversion count: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_related_vectors
+
+        :param int n: defaults to `degree`
+        :rtype: list of int
+        :raises ValueError: if ``n`` is less than `degree`
+        """
+        if n is None:
+            n = self.degree
+        elif n < self.degree:
+            raise ValueError(n)
+        left = list(range(1, n+1))
+        digits = []
+        for x in left[:]:
+            i = left.index(self(x))
+            del left[i]
+            digits.append(i)
+        return digits
+
     def lehmer(self, n):
         """
         Calculate the `Lehmer code
@@ -216,15 +247,7 @@ class Permutation(object):
         :rtype: int
         :raises ValueError: if ``n`` is less than `degree`
         """
-        if n < self.degree:
-            raise ValueError(n)
-        left = list(range(1, n+1))
-        digits = []
-        for x in left[:]:
-            i = left.index(self(x))
-            del left[i]
-            digits.append(i)
-        return from_factorial_base(digits[:-1])
+        return from_factorial_base(self.right_inversion_count(n)[:-1])
 
     @classmethod
     def from_lehmer(cls, x, n):
@@ -511,7 +534,7 @@ class Permutation(object):
         :return: the number of inversions in the permutation
         :rtype: int
         """
-        return sum(to_factorial_base(self.lehmer(self.degree)))
+        return sum(self.right_inversion_count())
 
 
 def lcm(x,y):
