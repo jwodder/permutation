@@ -498,6 +498,7 @@ class Permutation(object):
             out[self(i+1)-1] = xs[i]
         return tuple(out)
 
+    @property
     def inversion_number(self):
         """
         Calculate the `Inversion number`_ of the permutation

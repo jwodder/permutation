@@ -4,26 +4,26 @@ from   permutation import Permutation
 
 PermData = namedtuple(
     'PermData',
-    'p degree order even sign bool mod_lehmer cycles str image image6 permuted',
+    'p degree order even sign bool mod_lehmer inversion_number cycles str image image6 permuted',
 )
 
 PERMUTATIONS = [
-    PermData(Permutation(),            0, 1, True,   1, False,   0, [],                  '1',               (),            (1,2,3,4,5,6), ()),
-    PermData(Permutation(2,1),         2, 2, False, -1, True,    1, [(1,2)],             '(1 2)',           (2,1),         (2,1,3,4,5,6), (2,1)),
-    PermData(Permutation(1,3,2),       3, 2, False, -1, True,    2, [(2,3)],             '(2 3)',           (1,3,2),       (1,3,2,4,5,6), (1,3,2)),
-    PermData(Permutation(3,1,2),       3, 3, True,   1, True,    3, [(1,3,2)],           '(1 3 2)',         (3,1,2),       (3,1,2,4,5,6), (2,3,1)),
-    PermData(Permutation(2,3,1),       3, 3, True,   1, True,    4, [(1,2,3)],           '(1 2 3)',         (2,3,1),       (2,3,1,4,5,6), (3,1,2)),
-    PermData(Permutation(3,2,1),       3, 2, False, -1, True,    5, [(1,3)],             '(1 3)',           (3,2,1),       (3,2,1,4,5,6), (3,2,1)),
-    PermData(Permutation(1,2,4,3),     4, 2, False, -1, True,    6, [(3,4)],             '(3 4)',           (1,2,4,3),     (1,2,4,3,5,6), (1,2,4,3)),
-    PermData(Permutation(2,1,4,3),     4, 2, True,   1, True,    7, [(1,2),(3,4)],       '(1 2)(3 4)',      (2,1,4,3),     (2,1,4,3,5,6), (2,1,4,3)),
-    PermData(Permutation(2,3,4,1),     4, 4, False, -1, True,   18, [(1,2,3,4)],         '(1 2 3 4)',       (2,3,4,1),     (2,3,4,1,5,6), (4,1,2,3)),
-    PermData(Permutation(2,3,1,5,4),   5, 6, False, -1, True,   28, [(1,2,3),(4,5)],     '(1 2 3)(4 5)',    (2,3,1,5,4),   (2,3,1,5,4,6), (3,1,2,5,4)),
-    PermData(Permutation(2,3,4,5,1),   5, 5, True,   1, True,   96, [(1,2,3,4,5)],       '(1 2 3 4 5)',     (2,3,4,5,1),   (2,3,4,5,1,6), (5,1,2,3,4)),
-    PermData(Permutation(5,4,3,2,1),   5, 2, True,   1, True,  119, [(1,5),(2,4)],       '(1 5)(2 4)',      (5,4,3,2,1),   (5,4,3,2,1,6), (5,4,3,2,1)),
-    PermData(Permutation(2,1,4,3,6,5), 6, 2, False, -1, True,  127, [(1,2),(3,4),(5,6)], '(1 2)(3 4)(5 6)', (2,1,4,3,6,5), (2,1,4,3,6,5), (2,1,4,3,6,5)),
-    PermData(Permutation(2,3,4,1,6,5), 6, 4, True,   1, True,  138, [(1,2,3,4),(5,6)],   '(1 2 3 4)(5 6)',  (2,3,4,1,6,5), (2,3,4,1,6,5), (4,1,2,3,6,5)),
-    PermData(Permutation(2,3,1,5,6,4), 6, 3, True,   1, True,  244, [(1,2,3),(4,5,6)],   '(1 2 3)(4 5 6)',  (2,3,1,5,6,4), (2,3,1,5,6,4), (3,1,2,6,4,5)),
-    PermData(Permutation(2,3,4,5,6,1), 6, 6, False, -1, True,  600, [(1,2,3,4,5,6)],     '(1 2 3 4 5 6)',   (2,3,4,5,6,1), (2,3,4,5,6,1), (6,1,2,3,4,5)),
+    PermData(Permutation(),            0, 1, True,   1, False,   0,     0, [],                  '1',               (),            (1,2,3,4,5,6), ()),
+    PermData(Permutation(2,1),         2, 2, False, -1, True,    1,     1, [(1,2)],             '(1 2)',           (2,1),         (2,1,3,4,5,6), (2,1)),
+    PermData(Permutation(1,3,2),       3, 2, False, -1, True,    2,     1, [(2,3)],             '(2 3)',           (1,3,2),       (1,3,2,4,5,6), (1,3,2)),
+    PermData(Permutation(3,1,2),       3, 3, True,   1, True,    3,     2, [(1,3,2)],           '(1 3 2)',         (3,1,2),       (3,1,2,4,5,6), (2,3,1)),
+    PermData(Permutation(2,3,1),       3, 3, True,   1, True,    4,     2, [(1,2,3)],           '(1 2 3)',         (2,3,1),       (2,3,1,4,5,6), (3,1,2)),
+    PermData(Permutation(3,2,1),       3, 2, False, -1, True,    5,     3, [(1,3)],             '(1 3)',           (3,2,1),       (3,2,1,4,5,6), (3,2,1)),
+    PermData(Permutation(1,2,4,3),     4, 2, False, -1, True,    6,     1, [(3,4)],             '(3 4)',           (1,2,4,3),     (1,2,4,3,5,6), (1,2,4,3)),
+    PermData(Permutation(2,1,4,3),     4, 2, True,   1, True,    7,     2, [(1,2),(3,4)],       '(1 2)(3 4)',      (2,1,4,3),     (2,1,4,3,5,6), (2,1,4,3)),
+    PermData(Permutation(2,3,4,1),     4, 4, False, -1, True,   18,     3, [(1,2,3,4)],         '(1 2 3 4)',       (2,3,4,1),     (2,3,4,1,5,6), (4,1,2,3)),
+    PermData(Permutation(2,3,1,5,4),   5, 6, False, -1, True,   28,     3, [(1,2,3),(4,5)],     '(1 2 3)(4 5)',    (2,3,1,5,4),   (2,3,1,5,4,6), (3,1,2,5,4)),
+    PermData(Permutation(2,3,4,5,1),   5, 5, True,   1, True,   96,     4, [(1,2,3,4,5)],       '(1 2 3 4 5)',     (2,3,4,5,1),   (2,3,4,5,1,6), (5,1,2,3,4)),
+    PermData(Permutation(5,4,3,2,1),   5, 2, True,   1, True,  119,    10, [(1,5),(2,4)],       '(1 5)(2 4)',      (5,4,3,2,1),   (5,4,3,2,1,6), (5,4,3,2,1)),
+    PermData(Permutation(2,1,4,3,6,5), 6, 2, False, -1, True,  127,     3, [(1,2),(3,4),(5,6)], '(1 2)(3 4)(5 6)', (2,1,4,3,6,5), (2,1,4,3,6,5), (2,1,4,3,6,5)),
+    PermData(Permutation(2,3,4,1,6,5), 6, 4, True,   1, True,  138,     4, [(1,2,3,4),(5,6)],   '(1 2 3 4)(5 6)',  (2,3,4,1,6,5), (2,3,4,1,6,5), (4,1,2,3,6,5)),
+    PermData(Permutation(2,3,1,5,6,4), 6, 3, True,   1, True,  244,     4, [(1,2,3),(4,5,6)],   '(1 2 3)(4 5 6)',  (2,3,1,5,6,4), (2,3,1,5,6,4), (3,1,2,6,4,5)),
+    PermData(Permutation(2,3,4,5,6,1), 6, 6, False, -1, True,  600,     5, [(1,2,3,4,5,6)],     '(1 2 3 4 5 6)',   (2,3,4,5,6,1), (2,3,4,5,6,1), (6,1,2,3,4,5)),
 ]
 
 @pytest.mark.parametrize('p,degree', [(pd.p, pd.degree) for pd in PERMUTATIONS])
@@ -107,5 +107,9 @@ def test_permute(p, permuted):
 def test_bad_permute(p, degree):
     with pytest.raises(ValueError):
         p.permute(range(1, p.degree))
+
+@pytest.mark.parametrize('p,inversion_number', [(d.p, d.inversion_number) for d in PERMUTATIONS])
+def test_inversion_number(p, inversion_number):
+    assert p.inversion_number == inversion_number
 
 # vim:set nowrap:
