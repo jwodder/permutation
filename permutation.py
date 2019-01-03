@@ -507,7 +507,6 @@ class Permutation(object):
         This is also the Kendall tau distance from the identity permutation.
         This is also the sum of the terms in the lehmer code.
 
-
         .. _Inversion number: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_number>
 
         :return: the number of inversions in the permutation
