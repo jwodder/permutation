@@ -498,14 +498,13 @@ class Permutation(object):
             out[self(i+1)-1] = xs[i]
         return tuple(out)
 
-    @property
-    def inversion_number(self):
+    def inversions(self):
         """
-        Calculate the `Inversion number`_ of the permutation
-        This is the number of pairs of numbers which are in the opposite order
-        after applying the permutation.
-        This is also the Kendall tau distance from the identity permutation.
-        This is also the sum of the terms in the lehmer code.
+        Calculate the `inversion number`_ of the permutation.  This is the
+        number of pairs of numbers which are in the opposite order after
+        applying the permutation.  This is also the Kendall tau distance from
+        the identity permutation.  This is also the sum of the terms in the
+        Lehmer code when in factorial base.
 
         .. _Inversion number: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_number>
 

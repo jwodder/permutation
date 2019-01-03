@@ -4,7 +4,7 @@ from   permutation import Permutation
 
 PermData = namedtuple(
     'PermData',
-    'p degree order even sign bool mod_lehmer inversion_number cycles str image image6 permuted',
+    'p degree order even sign bool mod_lehmer inversions cycles str image image6 permuted',
 )
 
 PERMUTATIONS = [
@@ -108,8 +108,8 @@ def test_bad_permute(p, degree):
     with pytest.raises(ValueError):
         p.permute(range(1, p.degree))
 
-@pytest.mark.parametrize('p,inversion_number', [(d.p, d.inversion_number) for d in PERMUTATIONS])
-def test_inversion_number(p, inversion_number):
-    assert p.inversion_number == inversion_number
+@pytest.mark.parametrize('p,inversions', [(d.p, d.inversions) for d in PERMUTATIONS])
+def test_inversions(p, inversions):
+    assert p.inversions() == inversions
 
 # vim:set nowrap:
