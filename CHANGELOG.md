@@ -1,5 +1,5 @@
-v0.2.0 (in development)
------------------------
+v0.2.0 (2019-01-03)
+-------------------
 - Added an `inversions()` method for returning the inversion number of a
   permutation (based on a patch by @drocta)
 - Added a `right_inversion_count()` method

@@ -12,7 +12,7 @@ Visit <https://github.com/jwodder/permutation> or <http://permutation.rtfd.io>
 for more information.
 """
 
-__version__      = '0.2.0.dev1'
+__version__      = '0.2.0'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'permutation@varonathe.org'
 __license__      = 'MIT'
@@ -203,6 +203,8 @@ class Permutation(object):
 
     def right_inversion_count(self, n=None):
         """
+        .. versionadded:: 0.2.0
+
         Calculate the `right inversion count`_ or right inversion vector of the
         permutation through degree ``n``, or through `degree` if ``n`` is
         unspecified.  The result is a list of ``n`` elements in which the
@@ -523,6 +525,8 @@ class Permutation(object):
 
     def inversions(self):
         """
+        .. versionadded:: 0.2.0
+
         Calculate the `inversion number`_ of the permutation.  This is the
         number of pairs of numbers which are in the opposite order after
         applying the permutation.  This is also the Kendall tau distance from
