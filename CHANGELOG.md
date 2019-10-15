@@ -1,3 +1,7 @@
+v0.3.0 (in development)
+-----------------------
+- Support Python 3.8
+
 v0.2.0 (2019-01-03)
 -------------------
 - Added an `inversions()` method for returning the inversion number of a
