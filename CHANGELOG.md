@@ -2,6 +2,7 @@ v0.3.0 (in development)
 -----------------------
 - Support Python 3.8
 - Fix a typo in the link to the Wikipedia definition of "inversion number"
+- Drop support for Python 3.4
 
 v0.2.0 (2019-01-03)
 -------------------
