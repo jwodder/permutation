@@ -8,6 +8,7 @@ permutation — Permutations of finitely many positive integers
 | `PyPI <https://pypi.org/project/permutation>`_
 | `Documentation <https://permutation.readthedocs.io>`_
 | `Issues <https://github.com/jwodder/permutation/issues>`_
+| `Changelog <https://github.com/jwodder/permutation/blob/master/CHANGELOG.md>`_
 
 ``permutation`` provides a `Permutation` class for representing `permutations
 <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
