@@ -3,8 +3,8 @@
     :alt: Project Status: Active — The project has reached a stable, usable
           state and is being actively developed.
 
-.. image:: https://travis-ci.org/jwodder/permutation.svg?branch=master
-    :target: https://travis-ci.org/jwodder/permutation
+.. image:: https://travis-ci.com/jwodder/permutation.svg?branch=master
+    :target: https://travis-ci.com/jwodder/permutation
 
 .. image:: https://codecov.io/gh/jwodder/permutation/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/permutation
