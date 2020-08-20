@@ -216,7 +216,9 @@ class Permutation(object):
         trailing zeroes, which become relevant when converting to & from Lehmer
         codes and factorial base.
 
-        .. _right inversion count: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_related_vectors
+        .. _right inversion count:
+           https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
+           #Inversion_related_vectors
 
         :param int n: defaults to `degree`
         :rtype: list of int
@@ -292,7 +294,9 @@ class Permutation(object):
         integers, with `from_left_lehmer()` converting values in the opposite
         direction.
 
-        .. _inversion: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_related_vectors
+        .. _inversion:
+           https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
+           #Inversion_related_vectors
 
         :return: the permutation's left Lehmer code
         :rtype: int
@@ -533,7 +537,9 @@ class Permutation(object):
         the identity permutation.  This is also the sum of the terms in the
         Lehmer code when in factorial base.
 
-        .. _Inversion number: https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)#Inversion_number
+        .. _Inversion number:
+           https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
+           #Inversion_number
 
         :return: the number of inversions in the permutation
         :rtype: int
