@@ -1,5 +1,5 @@
+from   itertools   import zip_longest
 import pytest
-from   six.moves   import zip_longest
 from   permutation import Permutation
 
 S4 = [

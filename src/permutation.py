@@ -20,19 +20,13 @@ __url__          = 'https://github.com/jwodder/permutation'
 
 from   functools import reduce
 from   itertools import starmap
+from   math      import gcd
 import operator
 import re
 
-try:
-    # Importing fractions.gcd unconditionally produces a DeprecationWarning in
-    # 3.5+, so we need to use math.gcd whenever it's available.
-    from math      import gcd
-except ImportError:
-    from fractions import gcd
-
 __all__ = ["Permutation"]
 
-class Permutation(object):
+class Permutation:
     r"""
     A `Permutation` object represents a `permutation
     <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
@@ -46,7 +40,7 @@ class Permutation(object):
     6 to 2.  ``Permutation()`` (with no arguments) evaluates to the identity
     permutation (i.e., the permutation that returns all inputs unchanged).
 
-    `Permutation`\ s are hashable and immutable.  They can be compared for
+    `Permutation`\s are hashable and immutable.  They can be compared for
     equality but not for ordering/sorting.
     """
 
@@ -133,20 +127,15 @@ class Permutation(object):
                 cycles.append(map(int, re.split(r'\s*,\s*|\s+', cyc)))
         return cls.from_cycles(*cycles)
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ A `Permutation` is true iff it is not the identity """
         return self.__map != ()
-
-    __bool__ = __nonzero__
 
     def __eq__(self, other):
         if type(self) is type(other):
             return self.__map == other.__map
         else:
             return NotImplemented
-
-    def __ne__(self, other):
-        return not (self == other)
 
     def __hash__(self):
         return hash(self.__map)
@@ -389,7 +378,7 @@ class Permutation(object):
             if v < 1:
                 raise ValueError('values must be positive')
             if v in mapping:
-                raise ValueError('{} appears more than once in cycle'.format(v))
+                raise ValueError(f'{v} appears more than once in cycle')
             mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
             if v > maxVal:
                 maxVal = v

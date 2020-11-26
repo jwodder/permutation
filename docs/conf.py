@@ -1,5 +1,4 @@
-from   __future__  import unicode_literals
-from   permutation import __version__
+from permutation import __version__
 
 project   = 'permutation'
 author    = 'John T. Wodder II'
