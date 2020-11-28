@@ -2,7 +2,7 @@ from permutation import __version__
 
 project   = 'permutation'
 author    = 'John T. Wodder II'
-copyright = '2017-2019 John T. Wodder II'
+copyright = '2017-2020 John T. Wodder II'
 
 extensions = [
     'sphinx.ext.autodoc',

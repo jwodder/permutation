@@ -1,5 +1,5 @@
-v0.3.0 (in development)
------------------------
+v0.3.0 (2020-11-28)
+-------------------
 - Support Python 3.8 and 3.9
 - Fix a typo in the link to the Wikipedia definition of "inversion number"
 - Drop support for Python 2.7, 3.4, and 3.5
