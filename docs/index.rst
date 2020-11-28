@@ -66,7 +66,7 @@ API
 .. autoclass:: Permutation
     :special-members:
     :no-undoc-members:
-    :exclude-members: __weakref__
+    :exclude-members: __init__, __eq__, __hash__, __repr__, __weakref__
 
 Indices and tables
 ==================

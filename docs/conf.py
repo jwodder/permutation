@@ -12,7 +12,10 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
-autodoc_default_flags = ['members', 'undoc-members']
+autodoc_default_options = {
+    'members': True,
+    'undoc-members': True,
+}
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
@@ -20,7 +23,7 @@ intersphinx_mapping = {
 
 exclude_patterns = ['_build']
 source_suffix = '.rst'
-source_encoding = 'utf-8-sig'
+source_encoding = 'utf-8'
 master_doc = 'index'
 version = __version__
 release = __version__
