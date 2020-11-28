@@ -23,6 +23,15 @@ from   itertools import starmap
 from   math      import gcd
 import operator
 import re
+import sys
+from   typing    import Any, Optional, cast
+
+if sys.version_info[:2] >= (3,9):
+    from collections.abc import Iterable, Iterator, Sequence
+    List = list
+    Tuple = tuple
+else:
+    from typing import Iterable, Iterator, List, Sequence, Tuple
 
 __all__ = ["Permutation"]
 
@@ -44,7 +53,7 @@ class Permutation:
     equality but not for ordering/sorting.
     """
 
-    def __init__(self, *img):
+    def __init__(self, *img: int) -> None:
         d = len(img)
         used = [False] * d
         for i in img:
@@ -57,9 +66,9 @@ class Permutation:
             used[i-1] = True
         while d > 0 and img[d-1] == d:
             d -= 1
-        self.__map = img[:d]
+        self.__map: Tuple[int, ...] = img[:d]
 
-    def __call__(self, i):
+    def __call__(self, i: int) -> int:
         """
         Map an integer through the permutation.  Values less than 1 are
         returned unchanged.
@@ -69,7 +78,7 @@ class Permutation:
         """
         return self.__map[i-1] if 0 < i <= len(self.__map) else i
 
-    def __mul__(self, other):
+    def __mul__(self, other: "Permutation") -> "Permutation":
         """
         Multiplication/composition of permutations.  ``p * q`` returns a
         `Permutation` ``r`` such that ``r(x) == p(q(x))`` for all integers
@@ -81,10 +90,10 @@ class Permutation:
         return type(self)(*(self(other(i+1))
                             for i in range(max(self.degree, other.degree))))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '{0.__module__}.{0.__name__}{1!r}'.format(type(self), self.__map)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Convert a `Permutation` to `cycle notation
         <https://en.wikipedia.org/wiki/Permutation#Cycle_notation>`_.  The
@@ -104,7 +113,7 @@ class Permutation:
         ) or '1'
 
     @classmethod
-    def parse(cls, s):
+    def parse(cls, s: str) -> "Permutation":
         """
         Parse a permutation written in cycle notation.  This is the inverse of
         `__str__`.
@@ -127,21 +136,21 @@ class Permutation:
                 cycles.append(map(int, re.split(r'\s*,\s*|\s+', cyc)))
         return cls.from_cycles(*cycles)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         """ A `Permutation` is true iff it is not the identity """
         return self.__map != ()
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if type(self) is type(other):
-            return self.__map == other.__map
+            return bool(self.__map == other.__map)
         else:
             return NotImplemented
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__map)
 
     @property
-    def degree(self):
+    def degree(self) -> int:
         """
         The degree of the permutation, i.e., the largest integer that it
         permutes (does not map to itself), or 0 if there is no such integer
@@ -149,7 +158,7 @@ class Permutation:
         """
         return len(self.__map)
 
-    def inverse(self):
+    def inverse(self) -> "Permutation":
         """
         Returns the inverse of the permutation, i.e., the unique permutation
         that, when multiplied by the invocant on either the left or the right,
@@ -160,7 +169,7 @@ class Permutation:
         return type(self)(*self.permute(range(1, self.degree+1)))
 
     @property
-    def order(self):
+    def order(self) -> int:
         """
         The `order <https://en.wikipedia.org/wiki/Order_(group_theory)>`_
         (a.k.a. period) of the permutation, i.e., the smallest positive integer
@@ -170,7 +179,7 @@ class Permutation:
         return reduce(lcm, map(len, self.to_cycles()), 1)
 
     @property
-    def is_even(self):
+    def is_even(self) -> bool:
         """
         Whether the permutation is even, i.e., can be expressed as the product
         of an even number of transpositions (cycles of length 2)
@@ -178,19 +187,19 @@ class Permutation:
         return not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
 
     @property
-    def is_odd(self):
+    def is_odd(self) -> bool:
         """ Whether the permutation is odd, i.e., not even """
         return not self.is_even
 
     @property
-    def sign(self):
+    def sign(self) -> int:
         """
         The sign (a.k.a. signature) of the permutation: 1 if the permutation is
         even, -1 if it is odd
         """
         return 1 if self.is_even else -1
 
-    def right_inversion_count(self, n=None):
+    def right_inversion_count(self, n: Optional[int] = None) -> List[int]:
         """
         .. versionadded:: 0.2.0
 
@@ -209,15 +218,17 @@ class Permutation:
            https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
            #Inversion_related_vectors
 
-        :param int n: defaults to `degree`
-        :rtype: list of int
+        :param Optional[int] n: defaults to `degree`
+        :rtype: List[int]
         :raises ValueError: if ``n`` is less than `degree`
         """
         if n is None:
-            n = self.degree
+            m = self.degree
         elif n < self.degree:
             raise ValueError(n)
-        left = list(range(1, n+1))
+        else:
+            m = n
+        left = list(range(1, m+1))
         digits = []
         for x in left[:]:
             i = left.index(self(x))
@@ -225,7 +236,7 @@ class Permutation:
             digits.append(i)
         return digits
 
-    def lehmer(self, n):
+    def lehmer(self, n: int) -> int:
         """
         Calculate the `Lehmer code
         <https://en.wikipedia.org/wiki/Lehmer_code>`_ of the permutation with
@@ -243,7 +254,7 @@ class Permutation:
         return from_factorial_base(self.right_inversion_count(n)[:-1])
 
     @classmethod
-    def from_lehmer(cls, x, n):
+    def from_lehmer(cls, x: int, n: int) -> "Permutation":
         """
         Calculate the permutation in :math:`S_n` with Lehmer code ``x``.  This
         is the permutation at index ``x`` (zero-based) in the list of all
@@ -261,7 +272,7 @@ class Permutation:
         """
         if x < 0:
             raise ValueError(x)
-        mapping = []
+        mapping: List[int] = []
         x2 = x
         for i in range(1, n+1):
             x2, c = divmod(x2, i)
@@ -273,7 +284,7 @@ class Permutation:
             raise ValueError(x)
         return cls(*(c+1 for c in mapping))
 
-    def left_lehmer(self):
+    def left_lehmer(self) -> int:
         """
         Encode the permutation as a nonnegative integer using a modified form
         of `Lehmer codes <https://en.wikipedia.org/wiki/Lehmer_code>`_ that
@@ -299,7 +310,7 @@ class Permutation:
         return from_factorial_base(digits[:-1])
 
     @classmethod
-    def from_left_lehmer(cls, x):
+    def from_left_lehmer(cls, x: int) -> "Permutation":
         """
         Returns the permutation with the given left Lehmer code.  This is the
         inverse of `left_lehmer()`.
@@ -318,7 +329,7 @@ class Permutation:
             mapping.append(c)
         return cls(*(len(mapping)-c for c in mapping))
 
-    def to_cycles(self):
+    def to_cycles(self) -> List[Tuple[int, ...]]:
         """
         Decompose the permutation into a product of disjoint cycles.
         `to_cycles()` returns a list of cycles in which each cycle is a tuple
@@ -353,7 +364,7 @@ class Permutation:
         return cycles
 
     @classmethod
-    def cycle(cls, *cyc):
+    def cycle(cls, *cyc: int) -> "Permutation":
         """
         Construct a `cyclic permutation
         <https://en.wikipedia.org/wiki/Cyclic_permutation>`_ from a sequence of
@@ -371,21 +382,21 @@ class Permutation:
             - if ``cyc`` contains a value less than 1
             - if ``cyc`` contains the same value more than once
         """
-        cyc = list(cyc)
+        cyclist = list(cyc)
         mapping = {}
         maxVal = 0
-        for (i,v) in enumerate(cyc):
+        for (i,v) in enumerate(cyclist):
             if v < 1:
                 raise ValueError('values must be positive')
             if v in mapping:
                 raise ValueError(f'{v} appears more than once in cycle')
-            mapping[v] = cyc[i+1] if i < len(cyc)-1 else cyc[0]
+            mapping[v] = cyclist[i+1] if i < len(cyclist)-1 else cyclist[0]
             if v > maxVal:
                 maxVal = v
         return cls(*(mapping.get(i,i) for i in range(1, maxVal+1)))
 
     @classmethod
-    def from_cycles(cls, *cycles):
+    def from_cycles(cls, *cycles: Iterable[int]) -> "Permutation":
         """
         Construct a `Permutation` from zero or more cyclic permutations.  Each
         element of ``cycles`` is converted to a `Permutation` with `cycle`, and
@@ -403,7 +414,7 @@ class Permutation:
         """
         return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
 
-    def isdisjoint(self, other):
+    def isdisjoint(self, other: "Permutation") -> bool:
         """
         Returns `True` iff the permutation and ``other`` are disjoint, i.e.,
         iff they do not permute any of the same integers
@@ -414,7 +425,7 @@ class Permutation:
         return all(i+1 in (a,b)
                    for (i,(a,b)) in enumerate(zip(self.__map, other.__map)))
 
-    def next_permutation(self):
+    def next_permutation(self) -> "Permutation":
         """
         Returns the next `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
@@ -431,7 +442,7 @@ class Permutation:
         d = max(self.degree, 1)
         return type(self).cycle(d, d+1)
 
-    def prev_permutation(self):
+    def prev_permutation(self) -> "Permutation":
         """
         Returns the previous `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
@@ -453,7 +464,7 @@ class Permutation:
         raise AssertionError('Unreachable state reached')  # pragma: no cover
 
     @classmethod
-    def group(cls, n):
+    def group(cls, n: int) -> Iterator["Permutation"]:
         r"""
         Generates all permutations in :math:`S_n`, the symmetric group of
         degree ``n``, i.e., all permutations with degree less than or equal to
@@ -468,14 +479,14 @@ class Permutation:
             raise ValueError(n)
         # Use a nested function as the actual generator so that the ValueError
         # above can be raised immediately:
-        def sn():
+        def sn() -> Iterator[Permutation]:
             p = cls()
             while p.degree <= n:
                 yield p
                 p = p.next_permutation()
         return sn()
 
-    def to_image(self, n=None):
+    def to_image(self, n: Optional[int] = None) -> Tuple[int, ...]:
         """
         Returns a tuple of the results of applying the permutation to the
         integers 1 through ``n``, or through `degree` if ``n`` is unspecified.
@@ -488,14 +499,14 @@ class Permutation:
 
         :param int n: the length of the image to return; defaults to `degree`
         :return: the image of 1 through ``n`` under the permutation
-        :rtype: tuple of ints
+        :rtype: Tuple[int, ...]
         :raise ValueError: if ``n`` is less than `degree`
         """
         if n is not None and n < self.degree:
             raise ValueError(n)
         return self.__map + tuple(range(self.degree+1, (n or self.degree)+1))
 
-    def permute(self, xs):
+    def permute(self, xs: Iterable[int]) -> Tuple[int, ...]:
         """
         Reorder the elements of a sequence according to the permutation; each
         element at index ``i`` is moved to index ``p(i)``.
@@ -505,18 +516,18 @@ class Permutation:
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence
-        :rtype: tuple
+        :rtype: Tuple[int, ...]
         :raise ValueError: if ``len(xs)`` is less than `degree`
         """
         xs = list(xs)
         if len(xs) < self.degree:
             raise ValueError('sequence must have at least `degree` elements')
-        out = [None] * len(xs)
+        out: List[Optional[int]] = [None] * len(xs)
         for i in range(len(xs)):
             out[self(i+1)-1] = xs[i]
-        return tuple(out)
+        return tuple(cast(List[int], out))
 
-    def inversions(self):
+    def inversions(self) -> int:
         """
         .. versionadded:: 0.2.0
 
@@ -536,12 +547,12 @@ class Permutation:
         return sum(self.right_inversion_count())
 
 
-def lcm(x,y):
+def lcm(x: int, y: int) -> int:
     """ Calculate the least common multiple of ``x`` and ``y`` """
     d = gcd(x,y)
     return 0 if d == 0 else abs(x*y) // d
 
-def to_factorial_base(n):
+def to_factorial_base(n: int) -> List[int]:
     """
     Convert a nonnegative integer to its representation in the `factorial
     number system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
@@ -561,7 +572,7 @@ def to_factorial_base(n):
     digits.reverse()
     return digits
 
-def from_factorial_base(digits):
+def from_factorial_base(digits: Sequence[int]) -> int:
     """ Inverse of `to_factorial_base` """
     n = 0
     base = 1
