@@ -104,8 +104,8 @@ def test_from_image(p: Permutation, image: Tuple[int, ...]) -> None:
 def test_permute(p: Permutation, permuted: Tuple[int, ...]) -> None:
     assert p.permute(range(1, p.degree+1)) == permuted
 
-@pytest.mark.parametrize('p,degree', [(d.p, d.degree) for d in PERMUTATIONS if d.degree > 0])
-def test_bad_permute(p: Permutation, degree: int) -> None:
+@pytest.mark.parametrize('p', [d.p for d in PERMUTATIONS if d.degree > 0])
+def test_bad_permute(p: Permutation) -> None:
     with pytest.raises(ValueError):
         p.permute(range(1, p.degree))
 
