@@ -1,3 +1,4 @@
+from   typing      import List, Tuple
 import pytest
 from   permutation import from_factorial_base, to_factorial_base
 
@@ -58,18 +59,18 @@ FACTORIAL = [
 ]
 
 @pytest.mark.parametrize('n,digits', FACTORIAL)
-def test_to_factorial_base(n, digits):
+def test_to_factorial_base(n: int, digits: List[int]) -> None:
     assert to_factorial_base(n) == digits
 
-def test_bad_to_factorial_base():
+def test_bad_to_factorial_base() -> None:
     with pytest.raises(ValueError):
         to_factorial_base(-1)
 
 @pytest.mark.parametrize('n,digits', FACTORIAL)
-def test_from_factorial_base(n, digits):
+def test_from_factorial_base(n: int, digits: List[int]) -> None:
     assert from_factorial_base(digits) == n
 
 @pytest.mark.parametrize('digits', [(-1,), (2,), (1,2), (3,0), (4,1,2)])
-def test_bad_from_factorial_base(digits):
+def test_bad_from_factorial_base(digits: Tuple[int, ...]) -> None:
     with pytest.raises(ValueError):
         from_factorial_base(digits)

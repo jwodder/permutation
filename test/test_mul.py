@@ -57,7 +57,7 @@ CAYLEY = [
 
 @pytest.mark.parametrize('i', range(24))
 @pytest.mark.parametrize('j', range(24))
-def test_mul(i,j):
+def test_mul(i: int, j: int) -> None:
     assert S4[i] * S4[j] == S4[CAYLEY[i][j]]
 
 # vim:set nowrap:

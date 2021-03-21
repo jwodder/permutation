@@ -1,3 +1,4 @@
+from   typing      import List
 import pytest
 from   permutation import Permutation
 
@@ -22,25 +23,25 @@ PERMUTATIONS = [
 ]
 
 @pytest.mark.parametrize('p,degree,lehmer', [(p,d,l) for p,d,l,_ in PERMUTATIONS])
-def test_lehmer(p, degree, lehmer):
+def test_lehmer(p: Permutation, degree: int, lehmer: int) -> None:
     assert p.lehmer(degree) == lehmer
 
 @pytest.mark.parametrize('p', [p for p, _, _, _ in PERMUTATIONS])
-def test_bad_lehmer(p):
+def test_bad_lehmer(p: Permutation) -> None:
     with pytest.raises(ValueError):
         p.lehmer(p.degree-1)
 
 @pytest.mark.parametrize('p,degree,vec', [(p,d,v) for p,d,_,v in PERMUTATIONS])
-def test_right_inversion_count(p, degree, vec):
+def test_right_inversion_count(p: Permutation, degree: int, vec: List[int]) -> None:
     assert p.right_inversion_count(degree) == vec
 
 @pytest.mark.parametrize('p', [p for p, _, _, _ in PERMUTATIONS])
-def test_bad_right_inversion_count(p):
+def test_bad_right_inversion_count(p: Permutation) -> None:
     with pytest.raises(ValueError):
         p.right_inversion_count(p.degree-1)
 
 @pytest.mark.parametrize('p,degree,lehmer', [(p,d,l) for p,d,l,_ in PERMUTATIONS])
-def test_from_lehmer(p, degree, lehmer):
+def test_from_lehmer(p: int, degree: int, lehmer: int) -> None:
     assert Permutation.from_lehmer(lehmer, degree) == p
 
 @pytest.mark.parametrize('lehmer,degree', [
@@ -56,6 +57,6 @@ def test_from_lehmer(p, degree, lehmer):
     (-1, 3),
     (5040, 5),
 ])
-def test_bad_from_lehmer(lehmer, degree):
+def test_bad_from_lehmer(lehmer: int, degree: int) -> None:
     with pytest.raises(ValueError):
         Permutation.from_lehmer(lehmer, degree)

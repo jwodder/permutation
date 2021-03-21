@@ -29,29 +29,29 @@ S4 = [
     Permutation.from_cycles((1,4),(2,3)),
 ]
 
-def test_s4():
+def test_s4() -> None:
     for i,(p,q) in enumerate(zip_longest(Permutation.group(4), S4)):
         assert p == q
         assert p.left_lehmer() == i
 
-def test_next_permutation():
+def test_next_permutation() -> None:
     for i in range(len(S4)-1):
         assert S4[i].next_permutation() == S4[i+1]
         assert S4[i].left_lehmer()+1 == S4[i+1].left_lehmer()
 
-def test_prev_permutation():
+def test_prev_permutation() -> None:
     for i in range(len(S4)-1):
         assert S4[i+1].prev_permutation() == S4[i]
         assert S4[i+1].left_lehmer()-1 == S4[i].left_lehmer()
 
-def test_prev_permutation_identity():
+def test_prev_permutation_identity() -> None:
     with pytest.raises(ValueError):
         Permutation().prev_permutation()
 
-def test_s0():
+def test_s0() -> None:
     assert list(Permutation.group(0)) == [Permutation()]
     assert list(Permutation.group(1)) == [Permutation()]
 
-def test_bad_group():
+def test_bad_group() -> None:
     with pytest.raises(ValueError):
         Permutation.group(-1)

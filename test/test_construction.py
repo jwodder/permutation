@@ -1,3 +1,4 @@
+from   typing      import List, Tuple
 import pytest
 from   permutation import Permutation
 
@@ -10,7 +11,7 @@ from   permutation import Permutation
     ((4,7), Permutation(1,2,3,7,5,6,4)),
     ((7,4), Permutation(1,2,3,7,5,6,4)),
 ])
-def test_cycle(cyc, p):
+def test_cycle(cyc: Tuple[int, ...], p: Permutation) -> None:
     assert Permutation.cycle(*cyc) == p
 
 @pytest.mark.parametrize('cycles,p', [
@@ -26,7 +27,7 @@ def test_cycle(cyc, p):
     (((1,2),(3,4,5)), Permutation(2,1,4,5,3)),
     (((3,4,5),(1,2)), Permutation(2,1,4,5,3)),
 ])
-def test_from_cycles(cycles, p):
+def test_from_cycles(cycles: Tuple[Tuple[int, ...], ...], p: Permutation) -> None:
     assert Permutation.from_cycles(*cycles) == p
 
 @pytest.mark.parametrize('s,p', [
@@ -58,7 +59,7 @@ def test_from_cycles(cycles, p):
     ('(3 4 5),(1 2)',  Permutation(2,1,4,5,3)),
     ('(3,4,5),(1,2)',  Permutation(2,1,4,5,3)),
 ])
-def test_parse(s,p):
+def test_parse(s: str, p: Permutation) -> None:
     assert Permutation.parse(s) == p
 
 @pytest.mark.parametrize('cyc', [
@@ -74,7 +75,7 @@ def test_parse(s,p):
     [1, 2, 1],
     [1, 1],
 ])
-def test_bad_cycle(cyc):
+def test_bad_cycle(cyc: List[int]) -> None:
     with pytest.raises(ValueError):
         Permutation.cycle(*cyc)
 
@@ -86,7 +87,7 @@ def test_bad_cycle(cyc):
     [(1, 1,)],
     [(-1, 2), (-1, 2)],
 ])
-def test_bad_from_cycles(cycles):
+def test_bad_from_cycles(cycles: List[Tuple[int, ...]]) -> None:
     with pytest.raises(ValueError):
         Permutation.from_cycles(*cycles)
 
@@ -117,7 +118,7 @@ def test_bad_from_cycles(cycles):
     '(1,,2)',
     '(1, ,2)',
 ])
-def test_bad_parse(s):
+def test_bad_parse(s: str) -> None:
     with pytest.raises(ValueError):
         Permutation.parse(s)
 
@@ -132,6 +133,6 @@ def test_bad_parse(s):
     [-1, -2, -3],
     [1, 1],
 ])
-def test_bad_init(img):
+def test_bad_init(img: List[int]) -> None:
     with pytest.raises(ValueError):
         Permutation(*img)

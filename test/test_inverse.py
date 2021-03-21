@@ -19,7 +19,7 @@ from   permutation import Permutation
     (Permutation.from_cycles((1,2,3),(4,5,6)),   Permutation.from_cycles((3,2,1),(6,5,4))),
     (Permutation.cycle(1,2,3,4,5,6),             Permutation.cycle(6,5,4,3,2,1)),
 ])
-def test_inverse(p,q):
+def test_inverse(p: Permutation, q: Permutation) -> None:
     assert p.inverse() == q
     assert q.inverse() == p
     assert p*q == q*p == Permutation()

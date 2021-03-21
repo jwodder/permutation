@@ -1,3 +1,4 @@
+from   typing      import Any
 import pytest
 from   permutation import Permutation
 
@@ -66,7 +67,7 @@ EQUIV_CLASSES = [
 @pytest.mark.parametrize('p,q',
     [(p,q) for eqcls in EQUIV_CLASSES for p in eqcls for q in eqcls]
 )
-def test_eq(p,q):
+def test_eq(p: Permutation, q: Permutation) -> None:
     assert p == q
     assert not (p != q)
     assert hash(p) == hash(q)
@@ -77,12 +78,12 @@ def test_eq(p,q):
           for p in ps
           for q in qs
 ])
-def test_neq(p,q):
+def test_neq(p: Permutation, q: Permutation) -> None:
     assert p != q
     assert not (p == q)
 
 @pytest.mark.parametrize('p', [p for eqcls in EQUIV_CLASSES for p in eqcls])
 @pytest.mark.parametrize('x', [None, 0, 1, True, False, '(1 2)', (1,2), [1,2]])
-def test_neq_other_types(p,x):
+def test_neq_other_types(p: Permutation, x: Any) -> None:
     assert p != x
     assert not (p == x)

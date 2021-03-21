@@ -36,5 +36,5 @@ DISJOINT[5][14] = DISJOINT[14][5] = True  # (1 3), (2 4)
 @pytest.mark.parametrize('p,q,d', [
     (p, q, DISJOINT[i][j]) for i,p in enumerate(S4) for j,q in enumerate(S4)
 ])
-def test_is_disjoint(p, q, d):
+def test_is_disjoint(p: Permutation, q: Permutation, d: bool) -> None:
     assert p.isdisjoint(q) is d
