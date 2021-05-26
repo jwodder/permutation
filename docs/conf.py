@@ -10,6 +10,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx_copybutton',
 ]
 
 autodoc_default_options = {
@@ -41,3 +42,6 @@ html_last_updated_fmt = '%Y %b %d'
 html_show_sourcelink = True
 html_show_sphinx = True
 html_show_copyright = True
+
+copybutton_prompt_text = r">>> |\.\.\. |\$ "
+copybutton_prompt_is_regexp = True
