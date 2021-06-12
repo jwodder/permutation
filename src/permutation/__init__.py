@@ -12,28 +12,30 @@ Visit <https://github.com/jwodder/permutation> or <http://permutation.rtfd.io>
 for more information.
 """
 
-__version__      = '0.3.0'
-__author__       = 'John Thorvald Wodder II'
-__author_email__ = 'permutation@varonathe.org'
-__license__      = 'MIT'
-__url__          = 'https://github.com/jwodder/permutation'
+__version__ = "0.3.0"
+__author__ = "John Thorvald Wodder II"
+__author_email__ = "permutation@varonathe.org"
+__license__ = "MIT"
+__url__ = "https://github.com/jwodder/permutation"
 
-from   functools import reduce
-from   itertools import starmap
-from   math      import gcd
+from functools import reduce
+from itertools import starmap
+from math import gcd
 import operator
 import re
 import sys
-from   typing    import Any, Optional, cast
+from typing import Any, Optional, cast
 
-if sys.version_info[:2] >= (3,9):
+if sys.version_info[:2] >= (3, 9):
     from collections.abc import Iterable, Iterator, Sequence
+
     List = list
     Tuple = tuple
 else:
     from typing import Iterable, Iterator, List, Sequence, Tuple
 
 __all__ = ["Permutation"]
+
 
 class Permutation:
     r"""
@@ -58,13 +60,13 @@ class Permutation:
         used = [False] * d
         for i in img:
             if i < 1:
-                raise ValueError('values must be positive')
+                raise ValueError("values must be positive")
             if i > d:
-                raise ValueError('value missing from input')
-            if used[i-1]:
-                raise ValueError('value repeated in input')
-            used[i-1] = True
-        while d > 0 and img[d-1] == d:
+                raise ValueError("value missing from input")
+            if used[i - 1]:
+                raise ValueError("value repeated in input")
+            used[i - 1] = True
+        while d > 0 and img[d - 1] == d:
             d -= 1
         self.__map: Tuple[int, ...] = img[:d]
 
@@ -76,7 +78,7 @@ class Permutation:
         :param int i:
         :return: the image of ``i`` under the permutation
         """
-        return self.__map[i-1] if 0 < i <= len(self.__map) else i
+        return self.__map[i - 1] if 0 < i <= len(self.__map) else i
 
     def __mul__(self, other: "Permutation") -> "Permutation":
         """
@@ -87,11 +89,12 @@ class Permutation:
         :param Permutation other:
         :rtype: Permutation
         """
-        return type(self)(*(self(other(i+1))
-                            for i in range(max(self.degree, other.degree))))
+        return type(self)(
+            *(self(other(i + 1)) for i in range(max(self.degree, other.degree)))
+        )
 
     def __repr__(self) -> str:
-        return '{0.__module__}.{0.__name__}{1!r}'.format(type(self), self.__map)
+        return "{0.__module__}.{0.__name__}{1!r}".format(type(self), self.__map)
 
     def __str__(self) -> str:
         """
@@ -108,9 +111,10 @@ class Permutation:
         >>> str(Permutation(2, 5, 4, 3, 1))
         '(1 2 5)(3 4)'
         """
-        return ''.join(
-            '(' + ' '.join(map(str,cyc)) + ')' for cyc in self.to_cycles()
-        ) or '1'
+        return (
+            "".join("(" + " ".join(map(str, cyc)) + ")" for cyc in self.to_cycles())
+            or "1"
+        )
 
     @classmethod
     def parse(cls, s: str) -> "Permutation":
@@ -125,19 +129,19 @@ class Permutation:
             permutation
         """
         s = s.strip()
-        if s == '1':
+        if s == "1":
             return cls()
-        if not (s.startswith('(') and s.endswith(')')):
+        if not (s.startswith("(") and s.endswith(")")):
             raise ValueError(s)
         cycles = []
-        for cyc in re.split(r'\)[\s,]*\(', s[1:-1]):
+        for cyc in re.split(r"\)[\s,]*\(", s[1:-1]):
             cyc = cyc.strip()
             if cyc:
-                cycles.append(map(int, re.split(r'\s*,\s*|\s+', cyc)))
+                cycles.append(map(int, re.split(r"\s*,\s*|\s+", cyc)))
         return cls.from_cycles(*cycles)
 
     def __bool__(self) -> bool:
-        """ A `Permutation` is true iff it is not the identity """
+        """A `Permutation` is true iff it is not the identity"""
         return self.__map != ()
 
     def __eq__(self, other: Any) -> bool:
@@ -166,7 +170,7 @@ class Permutation:
 
         :rtype: Permutation
         """
-        return type(self)(*self.permute(range(1, self.degree+1)))
+        return type(self)(*self.permute(range(1, self.degree + 1)))
 
     @property
     def order(self) -> int:
@@ -184,11 +188,11 @@ class Permutation:
         Whether the permutation is even, i.e., can be expressed as the product
         of an even number of transpositions (cycles of length 2)
         """
-        return not sum((len(cyc)-1 for cyc in self.to_cycles()),0) % 2
+        return not sum((len(cyc) - 1 for cyc in self.to_cycles()), 0) % 2
 
     @property
     def is_odd(self) -> bool:
-        """ Whether the permutation is odd, i.e., not even """
+        """Whether the permutation is odd, i.e., not even"""
         return not self.is_even
 
     @property
@@ -228,7 +232,7 @@ class Permutation:
             raise ValueError(n)
         else:
             m = n
-        left = list(range(1, m+1))
+        left = list(range(1, m + 1))
         digits = []
         for x in left[:]:
             i = left.index(self(x))
@@ -274,15 +278,15 @@ class Permutation:
             raise ValueError(x)
         mapping: List[int] = []
         x2 = x
-        for i in range(1, n+1):
+        for i in range(1, n + 1):
             x2, c = divmod(x2, i)
-            for (j,y) in enumerate(mapping):
+            for (j, y) in enumerate(mapping):
                 if y >= c:
                     mapping[j] += 1
-            mapping.insert(0,c)
+            mapping.insert(0, c)
         if x2 != 0:
             raise ValueError(x)
-        return cls(*(c+1 for c in mapping))
+        return cls(*(c + 1 for c in mapping))
 
     def left_lehmer(self) -> int:
         """
@@ -323,11 +327,11 @@ class Permutation:
             raise ValueError(x)
         mapping = [0]
         for c in reversed(to_factorial_base(x)):
-            for (i,y) in enumerate(mapping):
+            for (i, y) in enumerate(mapping):
                 if y >= c:
                     mapping[i] += 1
             mapping.append(c)
-        return cls(*(len(mapping)-c for c in mapping))
+        return cls(*(len(mapping) - c for c in mapping))
 
     def to_cycles(self) -> List[Tuple[int, ...]]:
         """
@@ -352,13 +356,13 @@ class Permutation:
         cmap = list(self.__map)
         cycles = []
         for i in range(len(cmap)):
-            if cmap[i] not in (0, i+1):
-                x = i+1
+            if cmap[i] not in (0, i + 1):
+                x = i + 1
                 cyke = []
                 while True:
                     cyke.append(x)
-                    cmap[x-1], x = 0, cmap[x-1]
-                    if x == i+1:
+                    cmap[x - 1], x = 0, cmap[x - 1]
+                    if x == i + 1:
                         break
                 cycles.append(tuple(cyke))
         return cycles
@@ -385,15 +389,15 @@ class Permutation:
         cyclist = list(cyc)
         mapping = {}
         maxVal = 0
-        for (i,v) in enumerate(cyclist):
+        for (i, v) in enumerate(cyclist):
             if v < 1:
-                raise ValueError('values must be positive')
+                raise ValueError("values must be positive")
             if v in mapping:
-                raise ValueError(f'{v} appears more than once in cycle')
-            mapping[v] = cyclist[i+1] if i < len(cyclist)-1 else cyclist[0]
+                raise ValueError(f"{v} appears more than once in cycle")
+            mapping[v] = cyclist[i + 1] if i < len(cyclist) - 1 else cyclist[0]
             if v > maxVal:
                 maxVal = v
-        return cls(*(mapping.get(i,i) for i in range(1, maxVal+1)))
+        return cls(*(mapping.get(i, i) for i in range(1, maxVal + 1)))
 
     @classmethod
     def from_cycles(cls, *cycles: Iterable[int]) -> "Permutation":
@@ -422,8 +426,9 @@ class Permutation:
         :param Permutation other: a permutation to compare against
         :rtype: bool
         """
-        return all(i+1 in (a,b)
-                   for (i,(a,b)) in enumerate(zip(self.__map, other.__map)))
+        return all(
+            i + 1 in (a, b) for (i, (a, b)) in enumerate(zip(self.__map, other.__map))
+        )
 
     def next_permutation(self) -> "Permutation":
         """
@@ -432,7 +437,7 @@ class Permutation:
         """
         map2 = list(self.__map)
         for i in range(1, len(map2)):
-            if map2[i] > map2[i-1]:
+            if map2[i] > map2[i - 1]:
                 j = 0
                 while map2[i] <= map2[j]:
                     j += 1
@@ -440,7 +445,7 @@ class Permutation:
                 map2[:i] = reversed(map2[:i])
                 return type(self)(*map2)
         d = max(self.degree, 1)
-        return type(self).cycle(d, d+1)
+        return type(self).cycle(d, d + 1)
 
     def prev_permutation(self) -> "Permutation":
         """
@@ -451,17 +456,17 @@ class Permutation:
             no predecessor)
         """
         if self.degree < 2:
-            raise ValueError('cannot decrement identity')
+            raise ValueError("cannot decrement identity")
         map2 = list(self.__map)
         for i in range(1, len(map2)):
-            if map2[i] < map2[i-1]:
+            if map2[i] < map2[i - 1]:
                 j = 0
                 while map2[i] >= map2[j]:
                     j += 1
                 map2[i], map2[j] = map2[j], map2[i]
                 map2[:i] = reversed(map2[:i])
                 return type(self)(*map2)
-        raise AssertionError('Unreachable state reached')  # pragma: no cover
+        raise AssertionError("Unreachable state reached")  # pragma: no cover
 
     @classmethod
     def group(cls, n: int) -> Iterator["Permutation"]:
@@ -477,6 +482,7 @@ class Permutation:
         """
         if n < 0:
             raise ValueError(n)
+
         # Use a nested function as the actual generator so that the ValueError
         # above can be raised immediately:
         def sn() -> Iterator[Permutation]:
@@ -484,6 +490,7 @@ class Permutation:
             while p.degree <= n:
                 yield p
                 p = p.next_permutation()
+
         return sn()
 
     def to_image(self, n: Optional[int] = None) -> Tuple[int, ...]:
@@ -504,7 +511,7 @@ class Permutation:
         """
         if n is not None and n < self.degree:
             raise ValueError(n)
-        return self.__map + tuple(range(self.degree+1, (n or self.degree)+1))
+        return self.__map + tuple(range(self.degree + 1, (n or self.degree) + 1))
 
     def permute(self, xs: Iterable[int]) -> Tuple[int, ...]:
         """
@@ -521,10 +528,10 @@ class Permutation:
         """
         xs = list(xs)
         if len(xs) < self.degree:
-            raise ValueError('sequence must have at least `degree` elements')
+            raise ValueError("sequence must have at least `degree` elements")
         out: List[Optional[int]] = [None] * len(xs)
         for i in range(len(xs)):
-            out[self(i+1)-1] = xs[i]
+            out[self(i + 1) - 1] = xs[i]
         return tuple(cast(List[int], out))
 
     def inversions(self) -> int:
@@ -548,9 +555,10 @@ class Permutation:
 
 
 def lcm(x: int, y: int) -> int:
-    """ Calculate the least common multiple of ``x`` and ``y`` """
-    d = gcd(x,y)
-    return 0 if d == 0 else abs(x*y) // d
+    """Calculate the least common multiple of ``x`` and ``y``"""
+    d = gcd(x, y)
+    return 0 if d == 0 else abs(x * y) // d
+
 
 def to_factorial_base(n: int) -> List[int]:
     """
@@ -566,17 +574,18 @@ def to_factorial_base(n: int) -> List[int]:
     digits = []
     i = 1
     while n > 0:
-        digits.append(n % (i+1))
+        digits.append(n % (i + 1))
         i += 1
         n //= i
     digits.reverse()
     return digits
 
+
 def from_factorial_base(digits: Sequence[int]) -> int:
-    """ Inverse of `to_factorial_base` """
+    """Inverse of `to_factorial_base`"""
     n = 0
     base = 1
-    for i,d in enumerate(reversed(digits), start=1):
+    for i, d in enumerate(reversed(digits), start=1):
         if not (0 <= d <= i):
             raise ValueError(digits)
         n += d * base
