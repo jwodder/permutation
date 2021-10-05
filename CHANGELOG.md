@@ -1,5 +1,5 @@
-v0.3.1 (in development)
------------------------
+v0.3.1 (2021-10-05)
+-------------------
 - Fix a typing issue in Python 3.9
 - Support Python 3.10
 
