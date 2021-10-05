@@ -12,7 +12,7 @@ Visit <https://github.com/jwodder/permutation> or <http://permutation.rtfd.io>
 for more information.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.1.dev1"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "permutation@varonathe.org"
 __license__ = "MIT"
@@ -23,16 +23,7 @@ from itertools import starmap
 from math import gcd
 import operator
 import re
-import sys
-from typing import Any, Optional, cast
-
-if sys.version_info[:2] >= (3, 9):
-    from collections.abc import Iterable, Iterator, Sequence
-
-    List = list
-    Tuple = tuple
-else:
-    from typing import Iterable, Iterator, List, Sequence, Tuple
+from typing import Any, Iterable, Iterator, List, Optional, Sequence, Tuple, cast
 
 __all__ = ["Permutation"]
 

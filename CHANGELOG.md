@@ -1,3 +1,7 @@
+v0.3.1 (in development)
+-----------------------
+- Fix a typing issue in Python 3.9
+
 v0.3.0 (2020-11-28)
 -------------------
 - Support Python 3.8 and 3.9
