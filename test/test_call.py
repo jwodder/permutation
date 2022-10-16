@@ -1,4 +1,4 @@
-from typing import Tuple
+from __future__ import annotations
 import pytest
 from permutation import Permutation
 
@@ -32,7 +32,7 @@ from permutation import Permutation
         (4, 3, 2, 1, 5, 6),
     ],
 )
-def test_call(img: Tuple[int, ...]) -> None:
+def test_call(img: tuple[int, ...]) -> None:
     p = Permutation(*img)
     for x, y in enumerate(img, start=1):
         assert p(x) == y

@@ -1,5 +1,5 @@
+from __future__ import annotations
 from collections import namedtuple
-from typing import List, Tuple
 import pytest
 from permutation import Permutation
 
@@ -281,12 +281,12 @@ def test_bad_from_left_lehmer() -> None:
 
 
 @pytest.mark.parametrize("p,cycles", [(d.p, d.cycles) for d in PERMUTATIONS])
-def test_to_cycles(p: Permutation, cycles: List[Tuple[int, ...]]) -> None:
+def test_to_cycles(p: Permutation, cycles: list[tuple[int, ...]]) -> None:
     assert p.to_cycles() == cycles
 
 
 @pytest.mark.parametrize("p,cycles", [(d.p, d.cycles) for d in PERMUTATIONS])
-def test_from_cycles(p: Permutation, cycles: List[Tuple[int, ...]]) -> None:
+def test_from_cycles(p: Permutation, cycles: list[tuple[int, ...]]) -> None:
     assert Permutation.from_cycles(*cycles) == p
 
 
@@ -301,7 +301,7 @@ def test_parse(p: Permutation, s: str) -> None:
 
 
 @pytest.mark.parametrize("p,image", [(d.p, d.image) for d in PERMUTATIONS])
-def test_repr(p: Permutation, image: Tuple[int, ...]) -> None:
+def test_repr(p: Permutation, image: tuple[int, ...]) -> None:
     assert repr(p) == "permutation.Permutation" + repr(image)
 
 
@@ -311,12 +311,12 @@ def test_bool(p: Permutation, b: bool) -> None:
 
 
 @pytest.mark.parametrize("p,image", [(d.p, d.image) for d in PERMUTATIONS])
-def test_to_image(p: Permutation, image: Tuple[int, ...]) -> None:
+def test_to_image(p: Permutation, image: tuple[int, ...]) -> None:
     assert p.to_image() == image
 
 
 @pytest.mark.parametrize("p,image6", [(d.p, d.image6) for d in PERMUTATIONS])
-def test_to_extra_image(p: Permutation, image6: Tuple[int, ...]) -> None:
+def test_to_extra_image(p: Permutation, image6: tuple[int, ...]) -> None:
     assert p.to_image(6) == image6
 
 
@@ -327,12 +327,12 @@ def test_bad_to_image(p: Permutation, degree: int) -> None:
 
 
 @pytest.mark.parametrize("p,image", [(d.p, d.image) for d in PERMUTATIONS])
-def test_from_image(p: Permutation, image: Tuple[int, ...]) -> None:
+def test_from_image(p: Permutation, image: tuple[int, ...]) -> None:
     assert Permutation(*image) == p
 
 
 @pytest.mark.parametrize("p,permuted", [(d.p, d.permuted) for d in PERMUTATIONS])
-def test_permute(p: Permutation, permuted: Tuple[int, ...]) -> None:
+def test_permute(p: Permutation, permuted: tuple[int, ...]) -> None:
     assert p.permute(range(1, p.degree + 1)) == permuted
 
 

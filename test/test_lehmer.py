@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 import pytest
 from permutation import Permutation
 
@@ -35,7 +35,7 @@ def test_bad_lehmer(p: Permutation) -> None:
 
 
 @pytest.mark.parametrize("p,degree,vec", [(p, d, v) for p, d, _, v in PERMUTATIONS])
-def test_right_inversion_count(p: Permutation, degree: int, vec: List[int]) -> None:
+def test_right_inversion_count(p: Permutation, degree: int, vec: list[int]) -> None:
     assert p.right_inversion_count(degree) == vec
 
 

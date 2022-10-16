@@ -12,18 +12,20 @@ Visit <https://github.com/jwodder/permutation> or <http://permutation.rtfd.io>
 for more information.
 """
 
-__version__ = "0.4.0.dev1"
-__author__ = "John Thorvald Wodder II"
-__author_email__ = "permutation@varonathe.org"
-__license__ = "MIT"
-__url__ = "https://github.com/jwodder/permutation"
-
+from __future__ import annotations
+from collections.abc import Iterable, Iterator, Sequence
 from functools import reduce
 from itertools import starmap
 from math import gcd
 import operator
 import re
-from typing import Any, Iterable, Iterator, List, Optional, Sequence, Tuple, cast
+from typing import Any, List, Optional, cast
+
+__version__ = "0.4.0.dev1"
+__author__ = "John Thorvald Wodder II"
+__author_email__ = "permutation@varonathe.org"
+__license__ = "MIT"
+__url__ = "https://github.com/jwodder/permutation"
 
 __all__ = ["Permutation"]
 
@@ -59,7 +61,7 @@ class Permutation:
             used[i - 1] = True
         while d > 0 and img[d - 1] == d:
             d -= 1
-        self.__map: Tuple[int, ...] = img[:d]
+        self.__map: tuple[int, ...] = img[:d]
 
     def __call__(self, i: int) -> int:
         """
@@ -71,7 +73,7 @@ class Permutation:
         """
         return self.__map[i - 1] if 0 < i <= len(self.__map) else i
 
-    def __mul__(self, other: "Permutation") -> "Permutation":
+    def __mul__(self, other: Permutation) -> Permutation:
         """
         Multiplication/composition of permutations.  ``p * q`` returns a
         `Permutation` ``r`` such that ``r(x) == p(q(x))`` for all integers
@@ -108,7 +110,7 @@ class Permutation:
         )
 
     @classmethod
-    def parse(cls, s: str) -> "Permutation":
+    def parse(cls, s: str) -> Permutation:
         """
         Parse a permutation written in cycle notation.  This is the inverse of
         `__str__`.
@@ -153,7 +155,7 @@ class Permutation:
         """
         return len(self.__map)
 
-    def inverse(self) -> "Permutation":
+    def inverse(self) -> Permutation:
         """
         Returns the inverse of the permutation, i.e., the unique permutation
         that, when multiplied by the invocant on either the left or the right,
@@ -194,7 +196,7 @@ class Permutation:
         """
         return 1 if self.is_even else -1
 
-    def right_inversion_count(self, n: Optional[int] = None) -> List[int]:
+    def right_inversion_count(self, n: Optional[int] = None) -> list[int]:
         """
         .. versionadded:: 0.2.0
 
@@ -214,7 +216,7 @@ class Permutation:
            #Inversion_related_vectors
 
         :param Optional[int] n: defaults to `degree`
-        :rtype: List[int]
+        :rtype: list[int]
         :raises ValueError: if ``n`` is less than `degree`
         """
         if n is None:
@@ -249,7 +251,7 @@ class Permutation:
         return from_factorial_base(self.right_inversion_count(n)[:-1])
 
     @classmethod
-    def from_lehmer(cls, x: int, n: int) -> "Permutation":
+    def from_lehmer(cls, x: int, n: int) -> Permutation:
         """
         Calculate the permutation in :math:`S_n` with Lehmer code ``x``.  This
         is the permutation at index ``x`` (zero-based) in the list of all
@@ -267,7 +269,7 @@ class Permutation:
         """
         if x < 0:
             raise ValueError(x)
-        mapping: List[int] = []
+        mapping: list[int] = []
         x2 = x
         for i in range(1, n + 1):
             x2, c = divmod(x2, i)
@@ -305,7 +307,7 @@ class Permutation:
         return from_factorial_base(digits[:-1])
 
     @classmethod
-    def from_left_lehmer(cls, x: int) -> "Permutation":
+    def from_left_lehmer(cls, x: int) -> Permutation:
         """
         Returns the permutation with the given left Lehmer code.  This is the
         inverse of `left_lehmer()`.
@@ -324,7 +326,7 @@ class Permutation:
             mapping.append(c)
         return cls(*(len(mapping) - c for c in mapping))
 
-    def to_cycles(self) -> List[Tuple[int, ...]]:
+    def to_cycles(self) -> list[tuple[int, ...]]:
         """
         Decompose the permutation into a product of disjoint cycles.
         `to_cycles()` returns a list of cycles in which each cycle is a tuple
@@ -359,7 +361,7 @@ class Permutation:
         return cycles
 
     @classmethod
-    def cycle(cls, *cyc: int) -> "Permutation":
+    def cycle(cls, *cyc: int) -> Permutation:
         """
         Construct a `cyclic permutation
         <https://en.wikipedia.org/wiki/Cyclic_permutation>`_ from a sequence of
@@ -391,7 +393,7 @@ class Permutation:
         return cls(*(mapping.get(i, i) for i in range(1, maxVal + 1)))
 
     @classmethod
-    def from_cycles(cls, *cycles: Iterable[int]) -> "Permutation":
+    def from_cycles(cls, *cycles: Iterable[int]) -> Permutation:
         """
         Construct a `Permutation` from zero or more cyclic permutations.  Each
         element of ``cycles`` is converted to a `Permutation` with `cycle`, and
@@ -409,7 +411,7 @@ class Permutation:
         """
         return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
 
-    def isdisjoint(self, other: "Permutation") -> bool:
+    def isdisjoint(self, other: Permutation) -> bool:
         """
         Returns `True` iff the permutation and ``other`` are disjoint, i.e.,
         iff they do not permute any of the same integers
@@ -421,7 +423,7 @@ class Permutation:
             i + 1 in (a, b) for (i, (a, b)) in enumerate(zip(self.__map, other.__map))
         )
 
-    def next_permutation(self) -> "Permutation":
+    def next_permutation(self) -> Permutation:
         """
         Returns the next `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
@@ -438,7 +440,7 @@ class Permutation:
         d = max(self.degree, 1)
         return type(self).cycle(d, d + 1)
 
-    def prev_permutation(self) -> "Permutation":
+    def prev_permutation(self) -> Permutation:
         """
         Returns the previous `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
@@ -484,7 +486,7 @@ class Permutation:
 
         return sn()
 
-    def to_image(self, n: Optional[int] = None) -> Tuple[int, ...]:
+    def to_image(self, n: Optional[int] = None) -> tuple[int, ...]:
         """
         Returns a tuple of the results of applying the permutation to the
         integers 1 through ``n``, or through `degree` if ``n`` is unspecified.
@@ -497,14 +499,14 @@ class Permutation:
 
         :param int n: the length of the image to return; defaults to `degree`
         :return: the image of 1 through ``n`` under the permutation
-        :rtype: Tuple[int, ...]
+        :rtype: tuple[int, ...]
         :raise ValueError: if ``n`` is less than `degree`
         """
         if n is not None and n < self.degree:
             raise ValueError(n)
         return self.__map + tuple(range(self.degree + 1, (n or self.degree) + 1))
 
-    def permute(self, xs: Iterable[int]) -> Tuple[int, ...]:
+    def permute(self, xs: Iterable[int]) -> tuple[int, ...]:
         """
         Reorder the elements of a sequence according to the permutation; each
         element at index ``i`` is moved to index ``p(i)``.
@@ -514,13 +516,13 @@ class Permutation:
 
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence
-        :rtype: Tuple[int, ...]
+        :rtype: tuple[int, ...]
         :raise ValueError: if ``len(xs)`` is less than `degree`
         """
         xs = list(xs)
         if len(xs) < self.degree:
             raise ValueError("sequence must have at least `degree` elements")
-        out: List[Optional[int]] = [None] * len(xs)
+        out: list[Optional[int]] = [None] * len(xs)
         for i in range(len(xs)):
             out[self(i + 1) - 1] = xs[i]
         return tuple(cast(List[int], out))
@@ -551,7 +553,7 @@ def lcm(x: int, y: int) -> int:
     return 0 if d == 0 else abs(x * y) // d
 
 
-def to_factorial_base(n: int) -> List[int]:
+def to_factorial_base(n: int) -> list[int]:
     """
     Convert a nonnegative integer to its representation in the `factorial
     number system <https://en.wikipedia.org/wiki/Factorial_number_system>`_
