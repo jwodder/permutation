@@ -1,6 +1,8 @@
 v0.4.0 (in development)
 -----------------------
 - Drop support for Python 3.6
+- Add a `__pow__` method (contributed by
+  [@Deric-W](https://github.com/Deric-W))
 
 v0.3.1 (2021-10-05)
 -------------------
