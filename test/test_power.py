@@ -63,5 +63,5 @@ POWERS = [
 
 @pytest.mark.parametrize("base", range(len(BASES)))
 @pytest.mark.parametrize("exponent", range(len(EXPONENTS)))
-def test_power(base: int, exponent: int) -> Permutation:
+def test_power(base: int, exponent: int) -> None:
     assert BASES[base] ** EXPONENTS[exponent] == POWERS[base][exponent]
