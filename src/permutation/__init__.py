@@ -21,7 +21,7 @@ import operator
 import re
 from typing import Any, List, Optional, cast
 
-__version__ = "0.4.0.dev1"
+__version__ = "0.4.0"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "permutation@varonathe.org"
 __license__ = "MIT"
