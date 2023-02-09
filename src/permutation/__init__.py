@@ -291,7 +291,7 @@ class Permutation:
         x2 = x
         for i in range(1, n + 1):
             x2, c = divmod(x2, i)
-            for (j, y) in enumerate(mapping):
+            for j, y in enumerate(mapping):
                 if y >= c:
                     mapping[j] += 1
             mapping.insert(0, c)
@@ -338,7 +338,7 @@ class Permutation:
             raise ValueError(x)
         mapping = [0]
         for c in reversed(to_factorial_base(x)):
-            for (i, y) in enumerate(mapping):
+            for i, y in enumerate(mapping):
                 if y >= c:
                     mapping[i] += 1
             mapping.append(c)
@@ -400,7 +400,7 @@ class Permutation:
         cyclist = list(cyc)
         mapping = {}
         maxVal = 0
-        for (i, v) in enumerate(cyclist):
+        for i, v in enumerate(cyclist):
             if v < 1:
                 raise ValueError("values must be positive")
             if v in mapping:

@@ -1,7 +1,6 @@
 import pytest
 from permutation import Permutation
 
-
 BASES = [
     Permutation(),
     Permutation.from_cycles((1, 2)),
@@ -21,43 +20,43 @@ POWERS = [
         Permutation.from_cycles((2, 1)),
         Permutation(),
         Permutation.from_cycles((1, 2)),
-        Permutation()
+        Permutation(),
     ],
     [
         Permutation(),
         Permutation.from_cycles((3, 2)),
         Permutation(),
         Permutation.from_cycles((2, 3)),
-        Permutation()
+        Permutation(),
     ],
     [
         Permutation.from_cycles((1, 3, 2)),
         Permutation.from_cycles((1, 2, 3)),
         Permutation(),
         Permutation.from_cycles((1, 3, 2)),
-        Permutation.from_cycles((1, 2, 3))
+        Permutation.from_cycles((1, 2, 3)),
     ],
     [
         Permutation.from_cycles((1, 2, 4)),
         Permutation.from_cycles((1, 4, 2)),
         Permutation(),
         Permutation.from_cycles((1, 2, 4)),
-        Permutation.from_cycles((1, 4, 2))
+        Permutation.from_cycles((1, 4, 2)),
     ],
     [
         Permutation.from_cycles((1, 2), (3, 4)),
         Permutation.from_cycles((1, 4, 2, 3)),
         Permutation(),
         Permutation.from_cycles((1, 3, 2, 4)),
-        Permutation.from_cycles((1, 2), (3, 4))
+        Permutation.from_cycles((1, 2), (3, 4)),
     ],
     [
         Permutation(),
         Permutation.from_cycles((1, 4), (2, 3)),
         Permutation(),
         Permutation.from_cycles((1, 4), (2, 3)),
-        Permutation()
-    ]
+        Permutation(),
+    ],
 ]
 
 
