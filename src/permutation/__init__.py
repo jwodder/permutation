@@ -495,7 +495,7 @@ class Permutation:
         raise AssertionError("Unreachable state reached")  # pragma: no cover
 
     @classmethod
-    def group(cls, n: int) -> Iterator["Permutation"]:
+    def group(cls, n: int) -> Iterator[Permutation]:
         r"""
         Generates all permutations in :math:`S_n`, the symmetric group of
         degree ``n``, i.e., all permutations with degree less than or equal to
