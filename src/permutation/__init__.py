@@ -19,7 +19,7 @@ from itertools import starmap
 from math import gcd
 import operator
 import re
-from typing import Any, List, Optional, cast
+from typing import Any, List, Optional, TypeVar, cast
 
 __version__ = "0.5.0.dev1"
 __author__ = "John Thorvald Wodder II"
@@ -28,6 +28,8 @@ __license__ = "MIT"
 __url__ = "https://github.com/jwodder/permutation"
 
 __all__ = ["Permutation"]
+
+T = TypeVar("T")
 
 
 class Permutation:
@@ -524,26 +526,32 @@ class Permutation:
             raise ValueError(n)
         return self.__map + tuple(range(self.degree + 1, (n or self.degree) + 1))
 
-    def permute(self, xs: Iterable[int]) -> tuple[int, ...]:
+    def permute(self, xs: Iterable[T]) -> list[T]:
         """
-        Reorder the elements of a sequence according to the permutation; each
-        element at index ``i`` is moved to index ``p(i)``.
+        Return the elements of ``xs`` reordered according to the permutation;
+        each element at index ``i`` is moved to index ``p(i)``.
 
         Note that ``p.permute(range(1, n+1)) == p.inverse().to_image(n)`` for
         all integers ``n`` greater than or equal to `degree`.
 
+        .. versionchanged:: 0.5.0
+
+            This method now accepts iterables of any element type and returns a
+            list.  (Previously, it only accepted iterables of `int`\\s and
+            returned a tuple.)
+
         :param xs: a sequence of at least `degree` elements
         :return: a permuted sequence
-        :rtype: tuple[int, ...]
+        :rtype: list
         :raise ValueError: if ``len(xs)`` is less than `degree`
         """
         xs = list(xs)
         if len(xs) < self.degree:
             raise ValueError("sequence must have at least `degree` elements")
-        out: list[Optional[int]] = [None] * len(xs)
+        out: list[Optional[T]] = [None] * len(xs)
         for i in range(len(xs)):
             out[self(i + 1) - 1] = xs[i]
-        return tuple(cast(List[int], out))
+        return cast(List[T], out)
 
     def inversions(self) -> int:
         """
