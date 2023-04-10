@@ -88,23 +88,36 @@ class Permutation:
             *(self(other(i + 1)) for i in range(max(self.degree, other.degree)))
         )
 
-    def __pow__(self, other: int) -> Permutation:
+    def __pow__(self, n: int) -> Permutation:
         """
         Power/repeated composition of permutations.
-        ``p ** q`` returns a `Permutation` ``r`` such that ``p ** 0 == Permutation()``,
-        ``p ** n == p ** (n - 1) * p`` and ``p ** -n == p.inverse() ** n``.
 
-        :param int other:
+        - ``p ** 0 == Permutation()``
+        - ``p ** n == p ** (n - 1) * p``
+        - ``p ** -n == p.inverse() ** n``
+
+        :param int n: exponent
         :rtype: Permutation
         """
-        if other < 0:
-            base = self.inverse()
+        if n == 0:
+            return type(self)()
+        elif n < 0:
+            n *= -1
+            p = self.inverse()
         else:
-            base = self
-        power = type(self)()
-        for _ in range(abs(other)):
-            power *= base
-        return power
+            p = self
+        while not (n & 1):
+            p *= p
+            n >>= 1
+        agg = p
+        p *= p
+        n >>= 1
+        while n > 0:
+            if n & 1:
+                agg *= p
+            p *= p
+            n >>= 1
+        return agg
 
     def __repr__(self) -> str:
         return "{0.__module__}.{0.__name__}{1!r}".format(type(self), self.__map)
