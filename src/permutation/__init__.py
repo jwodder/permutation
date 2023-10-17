@@ -33,24 +33,29 @@ T = TypeVar("T")
 
 
 class Permutation:
-    r"""
+    """
     A `Permutation` object represents a `permutation
     <https://en.wikipedia.org/wiki/Permutation>`_ of finitely many positive
     integers, i.e., a bijective function from some integer range :math:`[1,n]`
     to itself.
 
-    The arguments to the constructor are the elements of the permutation's word
-    representation, i.e., the images of the integers 1 through some :math:`n`
-    under the permutation.  For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is
-    the permutation that maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and
-    6 to 2.  ``Permutation()`` (with no arguments) evaluates to the identity
-    permutation (i.e., the permutation that returns all inputs unchanged).
-
-    `Permutation`\s are hashable and immutable.  They can be compared for
+    `Permutation`\\s are hashable and immutable.  They can be compared for
     equality but not for ordering/sorting.
     """
 
     def __init__(self, *img: int) -> None:
+        """
+        Construct a permutation from a word representation.  The arguments are
+        the images of the integers 1 through some :math:`n` under the
+        permutation to construct.
+
+        For example, ``Permutation(5, 4, 3, 6, 1, 2)`` is the permutation that
+        maps 1 to 5, 2 to 4, 3 to itself, 4 to 6, 5 to 1, and 6 to 2.
+        ``Permutation()`` (with no arguments) evaluates to the identity
+        permutation (i.e., the permutation that returns all inputs unchanged).
+
+        :meta autosection: construction
+        """
         d = len(img)
         used = [False] * d
         for i in img:
@@ -72,6 +77,7 @@ class Permutation:
 
         :param int i:
         :return: the image of ``i`` under the permutation
+        :meta autosection: operations
         """
         return self.__map[i - 1] if 0 < i <= len(self.__map) else i
 
@@ -83,6 +89,7 @@ class Permutation:
 
         :param Permutation other:
         :rtype: Permutation
+        :meta autosection: operations
         """
         return type(self)(
             *(self(other(i + 1)) for i in range(max(self.degree, other.degree)))
@@ -98,6 +105,7 @@ class Permutation:
 
         :param int n: exponent
         :rtype: Permutation
+        :meta autosection: operations
         """
         if n == 0:
             return type(self)()
@@ -124,18 +132,22 @@ class Permutation:
 
     def __str__(self) -> str:
         """
-        Convert a `Permutation` to `cycle notation
-        <https://en.wikipedia.org/wiki/Permutation#Cycle_notation>`_.  The
-        instance is decomposed into cycles with `to_cycles()`, each cycle is
-        written as a parenthesized space-separated sequence of integers, and
-        the cycles are concatenated.
+        Convert a `Permutation` to `cycle notation`_.  The instance is
+        decomposed into cycles with `to_cycles()`, each cycle is written as a
+        parenthesized space-separated sequence of integers, and the cycles are
+        concatenated.
 
         ``str(Permutation())`` is ``"1"``.
 
         This is the inverse of `parse`.
 
+        .. _cycle notation:
+           https://en.wikipedia.org/wiki/Permutation#Cycle_notation
+
         >>> str(Permutation(2, 5, 4, 3, 1))
         '(1 2 5)(3 4)'
+
+        :meta autosection: properties
         """
         return (
             "".join("(" + " ".join(map(str, cyc)) + ")" for cyc in self.to_cycles())
@@ -151,6 +163,7 @@ class Permutation:
         :param str s: a permutation written in cycle notation
         :return: the permutation represented by ``s``
         :rtype: Permutation
+        :meta autosection: construction
         :raises ValueError: if ``s`` is not valid cycle notation for a
             permutation
         """
@@ -167,7 +180,11 @@ class Permutation:
         return cls.from_cycles(*cycles)
 
     def __bool__(self) -> bool:
-        """A `Permutation` is true iff it is not the identity"""
+        """
+        A `Permutation` is true iff it is not the identity.
+
+        :meta autosection: properties
+        """
         return self.__map != ()
 
     def __eq__(self, other: Any) -> bool:
@@ -179,66 +196,199 @@ class Permutation:
     def __hash__(self) -> int:
         return hash(self.__map)
 
-    @property
-    def degree(self) -> int:
-        """
-        The degree of the permutation, i.e., the largest integer that it
-        permutes (does not map to itself), or 0 if there is no such integer
-        (i.e., if the permutation is the identity)
-        """
-        return len(self.__map)
-
     def inverse(self) -> Permutation:
         """
-        Returns the inverse of the permutation, i.e., the unique permutation
+        Returns the inverse of the permutation.  This is the unique permutation
         that, when multiplied by the invocant on either the left or the right,
-        produces the identity
+        produces the identity.
 
         :rtype: Permutation
+        :meta autosection: properties
         """
         return type(self)(*self.permute(range(1, self.degree + 1)))
 
     @property
+    def degree(self) -> int:
+        """
+        The degree of the permutation.  This is the largest integer that it
+        permutes (does not map to itself), or 0 if there is no such integer
+        (i.e., if the permutation is the identity).
+
+        :meta autosection: properties
+        """
+        return len(self.__map)
+
+    @property
     def order(self) -> int:
         """
-        The `order <https://en.wikipedia.org/wiki/Order_(group_theory)>`_
-        (a.k.a. period) of the permutation, i.e., the smallest positive integer
-        :math:`n` such that multiplying :math:`n` copies of the permutation
-        together produces the identity
+        The order_/period of the permutation.  This is the smallest positive
+        integer :math:`n` such that multiplying :math:`n` copies of the
+        permutation together produces the identity
+
+        .. _order: https://en.wikipedia.org/wiki/Order_(group_theory)
+
+        :meta autosection: properties
         """
         return reduce(lcm, map(len, self.to_cycles()), 1)
 
     @property
     def is_even(self) -> bool:
         """
-        Whether the permutation is even, i.e., can be expressed as the product
-        of an even number of transpositions (cycles of length 2)
+        Whether the permutation is even.  That is, whether it can be expressed
+        as the product of an even number of transpositions (cycles of length
+        2).
+
+        :meta autosection: properties
         """
         return not sum((len(cyc) - 1 for cyc in self.to_cycles()), 0) % 2
 
     @property
     def is_odd(self) -> bool:
-        """Whether the permutation is odd, i.e., not even"""
+        """
+        Whether the permutation is odd, i.e., not even
+
+        :meta autosection: properties
+        """
         return not self.is_even
 
     @property
     def sign(self) -> int:
         """
-        The sign (a.k.a. signature) of the permutation: 1 if the permutation is
-        even, -1 if it is odd
+        The sign/signature of the permutation.  This is 1 if the permutation is
+        even, -1 if it is odd.
+
+        :meta autosection: properties
         """
         return 1 if self.is_even else -1
 
+    def isdisjoint(self, other: Permutation) -> bool:
+        """
+        Tests whether the permutation is disjoint from ``other``.  This returns
+        `True` iff the two permutations do not permute any of the same
+        integers.
+
+        :param Permutation other: a permutation to compare against
+        :rtype: bool
+        :meta autosection: properties
+        """
+        return all(
+            i + 1 in (a, b) for (i, (a, b)) in enumerate(zip(self.__map, other.__map))
+        )
+
+    def to_image(self, n: Optional[int] = None) -> tuple[int, ...]:
+        """
+        Returns the images of 1 through ``n`` under the permutation.  If ``v =
+        p.to_image()``, then ``v[0] == p(1)``, ``v[1] == p(2)``, etc.
+
+        When the permutation is the identity, `to_image` called without an
+        argument returns an empty tuple.
+
+        This is the inverse of the constructor.
+
+        :param int n: the length of the image to return; defaults to `degree`
+        :return: the image of 1 through ``n`` under the permutation
+        :rtype: tuple[int, ...]
+        :raise ValueError: if ``n`` is less than `degree`
+        :meta autosection: properties
+        """
+        if n is not None and n < self.degree:
+            raise ValueError(n)
+        return self.__map + tuple(range(self.degree + 1, (n or self.degree) + 1))
+
+    def to_cycles(self) -> list[tuple[int, ...]]:
+        """
+        Decompose the permutation into a product of disjoint cycles.
+        `to_cycles()` returns a list of cycles, each one represented as a tuple
+        of integers.  Each cycle ``c`` is a sub-permutation that maps ``c[0]``
+        to ``c[1]``, ``c[1]`` to ``c[2]``, etc., finally mapping ``c[-1]`` back
+        around to ``c[0]``.  The product of these cycles is then the original
+        permutation.
+
+        Each cycle is at least two elements in length and places its smallest
+        element first.  Cycles are ordered by their first elements in
+        increasing order.  No two cycles share an element.
+
+        When the permutation is the identity, `to_cycles()` returns an empty
+        list.
+
+        This is the inverse of `from_cycles`.
+
+        :return: the cycle decomposition of the permutation
+        :meta autosection: properties
+        """
+        cmap = list(self.__map)
+        cycles = []
+        for i in range(len(cmap)):
+            if cmap[i] not in (0, i + 1):
+                x = i + 1
+                cyke = []
+                while True:
+                    cyke.append(x)
+                    cmap[x - 1], x = 0, cmap[x - 1]
+                    if x == i + 1:
+                        break
+                cycles.append(tuple(cyke))
+        return cycles
+
+    @classmethod
+    def cycle(cls, *cyc: int) -> Permutation:
+        """
+        Construct a `cyclic permutation`_.  If ``p = Permutation.cycle(*cyc)``,
+        then ``p(cyc[0]) == cyc[1]``, ``p(cyc[1]) == cyc[2]``, etc., and
+        ``p(cyc[-1]) == cyc[0]``, with ``p`` returning all other values
+        unchanged.
+
+        ``Permutation.cycle()`` (with no arguments) evaluates to the identity
+        permutation.
+
+        .. _cyclic permutation: https://en.wikipedia.org/wiki/Cyclic_permutation
+
+        :param cyc: zero or more distinct positive integers
+        :return: the permutation represented by the given cycle
+        :meta autosection: construction
+        :raises ValueError:
+            - if ``cyc`` contains a value less than 1
+            - if ``cyc`` contains the same value more than once
+        """
+        cyclist = list(cyc)
+        mapping = {}
+        maxVal = 0
+        for i, v in enumerate(cyclist):
+            if v < 1:
+                raise ValueError("values must be positive")
+            if v in mapping:
+                raise ValueError(f"{v} appears more than once in cycle")
+            mapping[v] = cyclist[i + 1] if i < len(cyclist) - 1 else cyclist[0]
+            if v > maxVal:
+                maxVal = v
+        return cls(*(mapping.get(i, i) for i in range(1, maxVal + 1)))
+
+    @classmethod
+    def from_cycles(cls, *cycles: Iterable[int]) -> Permutation:
+        """
+        Construct the product of cyclic permutations.  Each element of
+        ``cycles`` is converted to a `Permutation` with `cycle`, and the
+        results (which need not be disjoint) are multiplied together.
+        ``Permutation.from_cycles()`` (with no arguments) evaluates to the
+        identity permutation.
+
+        This is the inverse of `to_cycles`.
+
+        :param cycles: zero or more iterables of distinct positive integers
+        :return: the `Permutation` represented by the product of the cycles
+        :meta autosection: construction
+        :raises ValueError:
+            - if any cycle contains a value less than 1
+            - if any cycle contains the same value more than once
+        """
+        return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
+
     def right_inversion_count(self, n: Optional[int] = None) -> list[int]:
         """
-        .. versionadded:: 0.2.0
-
-        Calculate the `right inversion count`_ or right inversion vector of the
-        permutation through degree ``n``, or through `degree` if ``n`` is
-        unspecified.  The result is a list of ``n`` elements in which the
-        element at index ``i`` corresponds to the number of right inversions
-        for ``i+1``, i.e., the number of values ``x > i+1`` for which ``p(x) <
-        p(i+1)``.
+        Calculate the `right inversion count`_ through degree ``n``.  The
+        result is a list of ``n`` elements in which the element at index ``i``
+        corresponds to the number of right inversions for ``i+1``, i.e., the
+        number of values ``x > i+1`` for which ``p(x) < p(i+1)``.
 
         Setting ``n`` larger than `degree` causes the resulting list to have
         trailing zeroes, which become relevant when converting to & from Lehmer
@@ -248,9 +398,12 @@ class Permutation:
            https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
            #Inversion_related_vectors
 
+        .. versionadded:: 0.2.0
+
         :param Optional[int] n: defaults to `degree`
         :rtype: list[int]
         :raises ValueError: if ``n`` is less than `degree`
+        :meta autosection: properties
         """
         if n is None:
             m = self.degree
@@ -266,20 +419,42 @@ class Permutation:
             digits.append(i)
         return digits
 
+    def inversions(self) -> int:
+        """
+        Calculate the `inversion number`_ of the permutation.  This is the
+        number of pairs of numbers which are in the opposite order after
+        applying the permutation.  This is also the Kendall tau distance from
+        the identity permutation.  This is also the sum of the terms in the
+        Lehmer code when in factorial base.
+
+        .. _Inversion number:
+           https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
+           #Inversion_number
+
+        .. versionadded:: 0.2.0
+
+        :return: the number of inversions in the permutation
+        :rtype: int
+        :meta autosection: properties
+        """
+        return sum(self.right_inversion_count())
+
     def lehmer(self, n: int) -> int:
         """
-        Calculate the `Lehmer code
-        <https://en.wikipedia.org/wiki/Lehmer_code>`_ of the permutation with
-        respect to all permutations of degree at most ``n``.  This is the
-        (zero-based) index of the permutation in the list of all permutations
-        of degree at most ``n`` ordered lexicographically by word
+        Calculate a `Lehmer code`_ for the permutation.  The Lehmer code is
+        computed with respect to all permutations of degree at most ``n`` and
+        evaluates to the zero-based index of the permutation in the list of all
+        such permutations when ordered lexicographically by word
         representation.
 
         This is the inverse of `from_lehmer`.
 
+        .. _Lehmer code: https://en.wikipedia.org/wiki/Lehmer_code
+
         :param int n:
         :rtype: int
         :raises ValueError: if ``n`` is less than `degree`
+        :meta autosection: properties
         """
         return from_factorial_base(self.right_inversion_count(n)[:-1])
 
@@ -293,6 +468,7 @@ class Permutation:
 
         This is the inverse of `lehmer`.
 
+        :meta autosection: construction
         :param int x: a nonnegative integer
         :param int n: the degree of the symmetric group with respect to which
             ``x`` was calculated
@@ -316,20 +492,20 @@ class Permutation:
 
     def left_lehmer(self) -> int:
         """
-        Encode the permutation as a nonnegative integer using a modified form
-        of `Lehmer codes <https://en.wikipedia.org/wiki/Lehmer_code>`_ that
-        uses `the left inversion count <inversion_>`_ instead of the right
-        inversion count.  This modified encoding establishes a
-        degree-independent bijection between permutations and nonnegative
-        integers, with `from_left_lehmer()` converting values in the opposite
-        direction.
+        Calculate the "left Lehmer code" for the permutation.  This uses a
+        modified form of `Lehmer codes <Lehmer code_>`_ that uses the `left
+        inversion count`_ instead of the right inversion count.  This modified
+        encoding establishes a degree-independent bijection between
+        permutations and nonnegative integers, with `from_left_lehmer()`
+        converting values in the opposite direction.
 
-        .. _inversion:
+        .. _left inversion count:
            https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
            #Inversion_related_vectors
 
         :return: the permutation's left Lehmer code
         :rtype: int
+        :meta autosection: properties
         """
         left = list(range(self.degree, 0, -1))
         digits = []
@@ -342,12 +518,13 @@ class Permutation:
     @classmethod
     def from_left_lehmer(cls, x: int) -> Permutation:
         """
-        Returns the permutation with the given left Lehmer code.  This is the
+        Calculate the permutation with the given left Lehmer code.  This is the
         inverse of `left_lehmer()`.
 
         :param int x: a nonnegative integer
         :return: the `Permutation` with left Lehmer code ``x``
         :raises ValueError: if ``x`` is less than 0
+        :meta autosection: construction
         """
         if x < 0:
             raise ValueError(x)
@@ -359,107 +536,38 @@ class Permutation:
             mapping.append(c)
         return cls(*(len(mapping) - c for c in mapping))
 
-    def to_cycles(self) -> list[tuple[int, ...]]:
-        """
-        Decompose the permutation into a product of disjoint cycles.
-        `to_cycles()` returns a list of cycles in which each cycle is a tuple
-        of integers.  Each cycle ``c`` is a sub-permutation that maps ``c[0]``
-        to ``c[1]``, ``c[1]`` to ``c[2]``, etc., finally mapping ``c[-1]`` back
-        around to ``c[0]``.  The permutation is then the product of these
-        cycles.
-
-        Each cycle is at least two elements in length and places its smallest
-        element first.  Cycles are ordered by their first elements in
-        increasing order.  No two cycles share an element.
-
-        When the permutation is the identity, `to_cycles()` returns an empty
-        list.
-
-        This is the inverse of `from_cycles`.
-
-        :return: the cycle decomposition of the permutation
-        """
-        cmap = list(self.__map)
-        cycles = []
-        for i in range(len(cmap)):
-            if cmap[i] not in (0, i + 1):
-                x = i + 1
-                cyke = []
-                while True:
-                    cyke.append(x)
-                    cmap[x - 1], x = 0, cmap[x - 1]
-                    if x == i + 1:
-                        break
-                cycles.append(tuple(cyke))
-        return cycles
-
     @classmethod
-    def cycle(cls, *cyc: int) -> Permutation:
+    def group(cls, n: int) -> Iterator[Permutation]:
         """
-        Construct a `cyclic permutation
-        <https://en.wikipedia.org/wiki/Cyclic_permutation>`_ from a sequence of
-        unique positive integers.  If ``p = Permutation.cycle(*cyc)``, then
-        ``p(cyc[0]) == cyc[1]``, ``p(cyc[1]) == cyc[2]``, etc., and
-        ``p(cyc[-1]) == cyc[0]``, with ``p`` returning all other values
-        unchanged.
+        Generates all permutations in :math:`S_n`.  This is the symmetric group
+        of degree ``n``, i.e., all permutations with degree less than or equal
+        to ``n``.  The permutations are yielded in ascending order of their
+        `left Lehmer codes <#permutation.Permutation.left_lehmer>`_.
 
-        ``Permutation.cycle()`` (with no arguments) evaluates to the identity
-        permutation.
-
-        :param cyc: zero or more unique positive integers
-        :return: the permutation represented by the given cycle
-        :raises ValueError:
-            - if ``cyc`` contains a value less than 1
-            - if ``cyc`` contains the same value more than once
+        :param int n: a nonnegative integer
+        :return: a generator of all `Permutation`\\s with degree ``n`` or less
+        :raises ValueError: if ``n`` is less than 0
+        :meta autosection: construction
         """
-        cyclist = list(cyc)
-        mapping = {}
-        maxVal = 0
-        for i, v in enumerate(cyclist):
-            if v < 1:
-                raise ValueError("values must be positive")
-            if v in mapping:
-                raise ValueError(f"{v} appears more than once in cycle")
-            mapping[v] = cyclist[i + 1] if i < len(cyclist) - 1 else cyclist[0]
-            if v > maxVal:
-                maxVal = v
-        return cls(*(mapping.get(i, i) for i in range(1, maxVal + 1)))
+        if n < 0:
+            raise ValueError(n)
 
-    @classmethod
-    def from_cycles(cls, *cycles: Iterable[int]) -> Permutation:
-        """
-        Construct a `Permutation` from zero or more cyclic permutations.  Each
-        element of ``cycles`` is converted to a `Permutation` with `cycle`, and
-        the results (which need not be disjoint) are multiplied together.
-        ``Permutation.from_cycles()`` (with no arguments) evaluates to the
-        identity permutation.
+        # Use a nested function as the actual generator so that the ValueError
+        # above can be raised immediately:
+        def sn() -> Iterator[Permutation]:
+            p = cls()
+            while p.degree <= n:
+                yield p
+                p = p.next_permutation()
 
-        This is the inverse of `to_cycles`.
-
-        :param cycles: zero or more iterables of unique positive integers
-        :return: the `Permutation` represented by the product of the cycles
-        :raises ValueError:
-            - if any cycle contains a value less than 1
-            - if any cycle contains the same value more than once
-        """
-        return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
-
-    def isdisjoint(self, other: Permutation) -> bool:
-        """
-        Returns `True` iff the permutation and ``other`` are disjoint, i.e.,
-        iff they do not permute any of the same integers
-
-        :param Permutation other: a permutation to compare against
-        :rtype: bool
-        """
-        return all(
-            i + 1 in (a, b) for (i, (a, b)) in enumerate(zip(self.__map, other.__map))
-        )
+        return sn()
 
     def next_permutation(self) -> Permutation:
         """
         Returns the next `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
+
+        :meta autosection: construction
         """
         map2 = list(self.__map)
         for i in range(1, len(map2)):
@@ -478,6 +586,7 @@ class Permutation:
         Returns the previous `Permutation` in `left Lehmer code
         <#permutation.Permutation.left_lehmer>`_ order
 
+        :meta autosection: construction
         :raises ValueError: if called on the identity `Permutation` (which has
             no predecessor)
         """
@@ -494,55 +603,10 @@ class Permutation:
                 return type(self)(*map2)
         raise AssertionError("Unreachable state reached")  # pragma: no cover
 
-    @classmethod
-    def group(cls, n: int) -> Iterator[Permutation]:
-        r"""
-        Generates all permutations in :math:`S_n`, the symmetric group of
-        degree ``n``, i.e., all permutations with degree less than or equal to
-        ``n``.  The permutations are yielded in ascending order of their `left
-        Lehmer codes <#permutation.Permutation.left_lehmer>`_.
-
-        :param int n: a nonnegative integer
-        :return: a generator of all `Permutation`\ s with degree ``n`` or less
-        :raises ValueError: if ``n`` is less than 0
-        """
-        if n < 0:
-            raise ValueError(n)
-
-        # Use a nested function as the actual generator so that the ValueError
-        # above can be raised immediately:
-        def sn() -> Iterator[Permutation]:
-            p = cls()
-            while p.degree <= n:
-                yield p
-                p = p.next_permutation()
-
-        return sn()
-
-    def to_image(self, n: Optional[int] = None) -> tuple[int, ...]:
-        """
-        Returns a tuple of the results of applying the permutation to the
-        integers 1 through ``n``, or through `degree` if ``n`` is unspecified.
-        If ``v = p.to_image()``, then ``v[0] == p(1)``, ``v[1] == p(2)``, etc.
-
-        When the permutation is the identity, `to_image` called without an
-        argument returns an empty tuple.
-
-        This is the inverse of the constructor.
-
-        :param int n: the length of the image to return; defaults to `degree`
-        :return: the image of 1 through ``n`` under the permutation
-        :rtype: tuple[int, ...]
-        :raise ValueError: if ``n`` is less than `degree`
-        """
-        if n is not None and n < self.degree:
-            raise ValueError(n)
-        return self.__map + tuple(range(self.degree + 1, (n or self.degree) + 1))
-
     def permute(self, xs: Iterable[T]) -> list[T]:
         """
-        Return the elements of ``xs`` reordered according to the permutation;
-        each element at index ``i`` is moved to index ``p(i)``.
+        Returns the elements of ``xs`` reordered according to the permutation.
+        Each element at index ``i`` is moved to index ``p(i)``.
 
         Note that ``p.permute(range(1, n+1)) == p.inverse().to_image(n)`` for
         all integers ``n`` greater than or equal to `degree`.
@@ -557,6 +621,7 @@ class Permutation:
         :return: a permuted sequence
         :rtype: list
         :raise ValueError: if ``len(xs)`` is less than `degree`
+        :meta autosection: operations
         """
         xs = list(xs)
         if len(xs) < self.degree:
@@ -565,25 +630,6 @@ class Permutation:
         for i in range(len(xs)):
             out[self(i + 1) - 1] = xs[i]
         return cast(List[T], out)
-
-    def inversions(self) -> int:
-        """
-        .. versionadded:: 0.2.0
-
-        Calculate the `inversion number`_ of the permutation.  This is the
-        number of pairs of numbers which are in the opposite order after
-        applying the permutation.  This is also the Kendall tau distance from
-        the identity permutation.  This is also the sum of the terms in the
-        Lehmer code when in factorial base.
-
-        .. _Inversion number:
-           https://en.wikipedia.org/wiki/Inversion_(discrete_mathematics)
-           #Inversion_number
-
-        :return: the number of inversions in the permutation
-        :rtype: int
-        """
-        return sum(self.right_inversion_count())
 
 
 def lcm(x: int, y: int) -> int:

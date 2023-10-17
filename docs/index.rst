@@ -31,6 +31,12 @@ Examples
 
 >>> from permutation import Permutation
 >>> p = Permutation(2, 1, 4, 5, 3)
+>>> p(1)
+2
+>>> p(3)
+4
+>>> p(42)
+42
 >>> p.to_cycles()
 [(1, 2), (3, 4, 5)]
 >>> print(p)
@@ -66,7 +72,9 @@ API
 .. autoclass:: Permutation
     :special-members:
     :no-undoc-members:
-    :exclude-members: __init__, __eq__, __hash__, __repr__, __weakref__
+    :exclude-members: __eq__, __hash__, __repr__, __weakref__
+
+    .. autoclasstoc::
 
 Indices and tables
 ==================

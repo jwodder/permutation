@@ -44,6 +44,12 @@ Examples
 
 >>> from permutation import Permutation
 >>> p = Permutation(2, 1, 4, 5, 3)
+>>> p(1)
+2
+>>> p(3)
+4
+>>> p(42)
+42
 >>> p.to_cycles()
 [(1, 2), (3, 4, 5)]
 >>> print(p)

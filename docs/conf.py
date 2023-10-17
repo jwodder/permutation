@@ -1,3 +1,5 @@
+from typing import Any
+from autoclasstoc import Section
 from permutation import __version__
 
 project = "permutation"
@@ -5,7 +7,9 @@ author = "John T. Wodder II"
 copyright = "2017-2022 John T. Wodder II"  # noqa: A001
 
 extensions = [
+    "autoclasstoc",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
@@ -43,3 +47,30 @@ html_show_copyright = True
 
 copybutton_prompt_text = r">>> |\.\.\. |\$ "
 copybutton_prompt_is_regexp = True
+
+
+class ConstructionSection(Section):
+    key = "construction"
+    title = "Construction:"
+
+    def predicate(self, _name: str, _attr: Any, meta: dict[str, str]) -> bool:
+        return meta.get("autosection") == "construction"
+
+
+class PropertiesSection(Section):
+    key = "properties"
+    title = "Properties:"
+
+    def predicate(self, _name: str, _attr: Any, meta: dict[str, str]) -> bool:
+        return meta.get("autosection") == "properties"
+
+
+class OperationsSection(Section):
+    key = "operations"
+    title = "Operations:"
+
+    def predicate(self, _name: str, _attr: Any, meta: dict[str, str]) -> bool:
+        return meta.get("autosection") == "operations"
+
+
+autoclasstoc_sections = ["construction", "operations", "properties"]
