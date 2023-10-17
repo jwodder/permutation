@@ -45,6 +45,11 @@ def test_bad_right_inversion_count(p: Permutation) -> None:
         p.right_inversion_count(p.degree - 1)
 
 
+@pytest.mark.parametrize("p", [p for p, _, _, _ in PERMUTATIONS])
+def test_default_right_inversion_count(p: Permutation) -> None:
+    assert p.right_inversion_count() == p.right_inversion_count(p.degree)
+
+
 @pytest.mark.parametrize("p,degree,lehmer", [(p, d, l) for p, d, l, _ in PERMUTATIONS])
 def test_from_lehmer(p: int, degree: int, lehmer: int) -> None:
     assert Permutation.from_lehmer(lehmer, degree) == p
