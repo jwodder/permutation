@@ -1,4 +1,4 @@
 autoclasstoc~=1.6
 Sphinx~=7.0
 sphinx-copybutton~=0.5.0
-sphinx_rtd_theme~=1.0
+sphinx_rtd_theme~=2.0
