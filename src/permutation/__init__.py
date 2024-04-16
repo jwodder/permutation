@@ -57,15 +57,16 @@ class Permutation:
         :meta autosection: construction
         """
         d = len(img)
-        used = [False] * d
-        for i in img:
-            if i < 1:
-                raise ValueError("values must be positive")
-            if i > d:
-                raise ValueError("value missing from input")
-            if used[i - 1]:
-                raise ValueError("value repeated in input")
-            used[i - 1] = True
+
+        # Checks on the input are performed just if an arguments is given
+        if img:
+            if min(img) < 1:
+                raise ValueError("Every value in input must be positive")
+            if max(img) > d:
+                raise ValueError("One or more values are missing from input")
+            if len(set(img)) != d:
+                raise ValueError("One or more values are repeated in input")
+
         while d > 0 and img[d - 1] == d:
             d -= 1
         self.__map: tuple[int, ...] = img[:d]
