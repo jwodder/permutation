@@ -4,6 +4,7 @@ v0.5.0 (in development)
 - The `permute()` method now accepts iterables of any element type and returns
   a list
 - Migrated from setuptools to hatch
+- Drop support for Python 3.7
 
 v0.4.0 (2022-10-21)
 -------------------

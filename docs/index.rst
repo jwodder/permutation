@@ -20,7 +20,7 @@ callable on integers.
 
 Installation
 ============
-``permutation`` requires Python 3.7 or higher.  Just use `pip
+``permutation`` requires Python 3.8 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install::
 
     python3 -m pip install permutation
