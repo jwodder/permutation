@@ -11,4 +11,5 @@ build:
     python: "3"
 sphinx:
   configuration: docs/conf.py
-  fail_on_warning: true
+  # Set to `false` due to <https://github.com/kalekundert/autoclasstoc/issues/39>:
+  fail_on_warning: false
