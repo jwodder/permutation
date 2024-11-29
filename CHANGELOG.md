@@ -1,6 +1,6 @@
 v0.5.0 (in development)
 -----------------------
-- Support Python 3.11 and 3.12
+- Support Python 3.11, 3.12, and 3.13
 - The `permute()` method now accepts iterables of any element type and returns
   a list
 - Migrated from setuptools to hatch
