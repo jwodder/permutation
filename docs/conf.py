@@ -4,7 +4,7 @@ from permutation import __version__
 
 project = "permutation"
 author = "John T. Wodder II"
-copyright = "2017-2022 John T. Wodder II"  # noqa: A001
+copyright = "2017-2024 John T. Wodder II"  # noqa: A001
 
 extensions = [
     "autoclasstoc",

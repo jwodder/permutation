@@ -1,8 +1,8 @@
-v0.5.0 (in development)
------------------------
+v0.5.0 (2024-12-01)
+-------------------
 - Support Python 3.11, 3.12, and 3.13
 - The `permute()` method now accepts iterables of any element type and returns
-  a list
+  a list instead of a tuple
 - Migrated from setuptools to hatch
 - Drop support for Python 3.7
 
