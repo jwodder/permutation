@@ -19,9 +19,9 @@ from itertools import starmap
 from math import gcd
 import operator
 import re
-from typing import Any, List, Optional, TypeVar, cast
+from typing import Any, TypeVar, cast
 
-__version__ = "0.5.0"
+__version__ = "0.6.0.dev1"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "permutation@varonathe.org"
 __license__ = "MIT"
@@ -275,7 +275,7 @@ class Permutation:
             i + 1 in (a, b) for (i, (a, b)) in enumerate(zip(self.__map, other.__map))
         )
 
-    def to_image(self, n: Optional[int] = None) -> tuple[int, ...]:
+    def to_image(self, n: int | None = None) -> tuple[int, ...]:
         """
         Returns the images of 1 through ``n`` under the permutation.  If ``v =
         p.to_image()``, then ``v[0] == p(1)``, ``v[1] == p(2)``, etc.
@@ -383,7 +383,7 @@ class Permutation:
         """
         return reduce(operator.mul, starmap(cls.cycle, cycles), cls())
 
-    def right_inversion_count(self, n: Optional[int] = None) -> list[int]:
+    def right_inversion_count(self, n: int | None = None) -> list[int]:
         """
         Calculate the `right inversion count`_ through degree ``n``.  The
         result is a list of ``n`` elements in which the element at index ``i``
@@ -626,10 +626,10 @@ class Permutation:
         xs = list(xs)
         if len(xs) < self.degree:
             raise ValueError("sequence must have at least `degree` elements")
-        out: list[Optional[T]] = [None] * len(xs)
+        out: list[T | None] = [None] * len(xs)
         for i in range(len(xs)):
             out[self(i + 1) - 1] = xs[i]
-        return cast(List[T], out)
+        return cast(list[T], out)
 
 
 def lcm(x: int, y: int) -> int:
